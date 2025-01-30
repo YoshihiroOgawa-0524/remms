@@ -3,18 +3,17 @@
 	<head>
 		<meta charset="UTF-8" />
 		<title>ログイン</title>
-		<link th:href="@{/css/layout.css}" rel="stylesheet" />
 		<link th:href="@{/css/style.css}" rel="stylesheet" />
 	</head>
 	<body>
 		<div>
-			<div class="center">
-				<h1>ログイン画面</h1>
+			<div class="login">
+				<h1>ログイン</h1>
 			</div>
-			<div class="right">
+			<div class="login">
 				<p th:text="${contract.contractName}"></p>
 			</div>
-			<div class="center">
+			<div class="login">
 				<form method="post" action="/doLogin">
 					<div class="input">
 						ユーザ ID：<input type="text" name="userId" />
