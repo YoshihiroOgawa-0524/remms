@@ -1,4 +1,4 @@
-package jp.co.rems.entity;
+package jp.co.remms.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

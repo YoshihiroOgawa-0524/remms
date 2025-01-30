@@ -1,4 +1,4 @@
-package jp.co.rems.entity;
+package jp.co.remms.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,19 +9,40 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "contract_types")
+@Table(name = "contracts")
 
-public class ContractType {
+public class Contract {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_contracts_gen")
 	@SequenceGenerator(name = "seq_contracts_gen", sequenceName = "seq_contracts", allocationSize = 1)
 	private Integer id;
-
-	@Column
-	private String typeName;
 	
 	@Column
-	private String memo;
+	private String contractKey;
+	
+	@Column
+	private String contractName;
+	
+	@Column
+	private String contractKana;
+	
+	@Column
+	private String contractDate;
+	
+	@Column
+	private String zip;
+	
+	@Column
+	private String pref;
+	
+	@Column
+	private String address1;
+	
+	@Column
+	private String address2;
+	
+	@Column
+	private String tel;
 	
 	@Column
 	private String createDate;
@@ -40,7 +61,7 @@ public class ContractType {
 	
 	@Column
 	private Integer deleteUser;
-	
+
 	public Integer getId() {
 		return id;
 	}
@@ -48,21 +69,77 @@ public class ContractType {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
-	public String getTypeName() {
-		return typeName;
+	
+	public String getContractKey() {
+		return contractKey;
 	}
 
-	public void setTypeName(String type_name) {
-		this.typeName = type_name;
+	public void setContractKey(String contract_key) {
+		this.contractKey = contract_key;
 	}
 	
-	public String getMemo() {
-		return memo;
+	public String getContractName() {
+		return contractName;
 	}
 	
-	public void setMemo(String memo) {
-		this.memo = memo;
+	public void setContractName(String contract_name) {
+		this.contractName = contract_name;
+	}
+	
+	public String getContractKana() {
+		return contractKana;
+	}
+	
+	public void setContractKana(String contract_kana) {
+		this.contractKana = contract_kana;
+	}
+
+	public String getContractDate() {
+		return contractDate;
+	}
+	
+	public void setContractDate(String contract_date) {
+		this.contractDate = contract_date;
+	}
+
+	public String getZip() {
+		return zip;
+	}
+	
+	public void setZip(String zip) {
+		this.zip = zip;
+	}
+
+	public String getPref() {
+		return pref;
+	}
+	
+	public void setPref(String pref) {
+		this.pref = pref;
+	}
+
+	public String getAddress1() {
+		return address1;
+	}
+	
+	public void setAddress1(String address_1) {
+		this.address1 = address_1;
+	}
+
+	public String getAddress2() {
+		return address2;
+	}
+	
+	public void setAddress2(String address_2) {
+		this.address2 = address_2;
+	}
+
+	public String getTel() {
+		return tel;
+	}
+	
+	public void setTel(String tel) {
+		this.tel = tel;
 	}
 
 	public String getCreateDate() {

@@ -1,10 +1,10 @@
-package jp.co.rems.repository;
+package jp.co.remms.repository;
 
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import jp.co.rems.entity.User;
+import jp.co.remms.entity.User;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
 	User findByUserId(String user_id);

@@ -1,4 +1,4 @@
-package jp.co.rems.controller;
+package jp.co.remms.controller;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -9,8 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import jp.co.rems.repository.ContractRepository;
-import jp.co.rems.repository.UserRepository;
+import jp.co.remms.repository.ContractRepository;
+import jp.co.remms.repository.UserRepository;
 
 @Controller
 public class UserListController {

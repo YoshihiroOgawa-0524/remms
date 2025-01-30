@@ -1,4 +1,4 @@
-package jp.co.rems.controller;
+package jp.co.remms.controller;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import jp.co.rems.entity.Contract;
-import jp.co.rems.entity.User;
-import jp.co.rems.repository.ContractRepository;
-import jp.co.rems.repository.UserRepository;
+import jp.co.remms.entity.Contract;
+import jp.co.remms.entity.User;
+import jp.co.remms.repository.ContractRepository;
+import jp.co.remms.repository.UserRepository;
 
 @Controller
 public class SessionController {
