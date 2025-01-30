@@ -9,15 +9,17 @@
 			<table>
 				<tr>
 					<th>顧客名</th>
-					<th>ユーザ名</th>
-					<th>ユーザ名ｶﾅ</th>
-					<th>ユーザタイプ</th>
+					<th>顧客名ｶﾅ</th>
+					<th>電話番号</th>
+					<th>FAX番号</th>
+					<th>携帯番号</th>
 				</tr>
-				<tr th:each="contract: ${contracts}">
-					<td th:text="${user.userId}"></td>
-					<td th:text="${user.name}"></td>
-					<td th:text="${user.nameKana}"></td>
-					<td th:text="${user.type}"></td>
+				<tr th:each="customer: ${customers}">
+					<td th:text="${customer.customer_name}"></td>
+					<td th:text="${customer.customer_kana}"></td>
+					<td th:text="${customer.phone_no}"></td>
+					<td th:text="${customer.fax_no}"></td>
+					<td th:text="${customer.mobile_phone}"></td>
 				</tr>
 			</table>
 		</div>
