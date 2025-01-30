@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{common/layout::layout(~{::body/content()})}">
+	<head>
+		<meta charset="UTF-8">
+	</head>
+	<body>
+		<div class="center">
+			<h1>顧客一覧</h1>
+			<table>
+				<tr>
+					<th>顧客名</th>
+					<th>ユーザ名</th>
+					<th>ユーザ名ｶﾅ</th>
+					<th>ユーザタイプ</th>
+				</tr>
+				<tr th:each="contract: ${contracts}">
+					<td th:text="${user.userId}"></td>
+					<td th:text="${user.name}"></td>
+					<td th:text="${user.nameKana}"></td>
+					<td th:text="${user.type}"></td>
+				</tr>
+			</table>
+		</div>
+	</body>
+</html>

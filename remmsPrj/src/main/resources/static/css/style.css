@@ -1,0 +1,27 @@
+@charset "UTF-8";
+
+.right{
+	text-align: right;
+}
+
+.input{
+	height: 50px;
+}
+
+.button{
+	height: 100px;
+}
+
+.button1{
+	background-color: #174a5c;
+	color: white;
+	border-style: none;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+}
+
+.button1:hover{
+	background-color: orange;
+	color: white;
+}

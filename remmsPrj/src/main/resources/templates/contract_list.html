@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{common/layout::layout(~{::body/content()})}">
+	<head>
+		<meta charset="UTF-8">
+	</head>
+	<body>
+		<div class="center">
+			<h1>契約者管理</h1>
+			<table>
+				<tr>
+					<th>契約ID</th>
+					<th>契約名</th>
+					<th>契約名ｶﾅ</th>
+					<th>契約日</th>
+				</tr>
+				<tr th:each="contract: ${contracts}">
+					<td th:text="${contract.contractKey}"></td>
+					<td th:text="${contract.contractName}"></td>
+					<td th:text="${contract.contractKana}"></td>
+					<td th:text="${contract.contractDate}"></td>
+				</tr>
+			</table>
+		</div>
+	</body>
+</html>

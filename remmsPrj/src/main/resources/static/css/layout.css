@@ -1,0 +1,52 @@
+@charset "UTF-8";
+
+div#header{
+	background-color: #c0c0c0;
+	display: table;
+	width: 100%
+}
+
+div#container{
+	flex-grow: 1;
+}
+
+div#sidebar{
+	background-color: #808080;
+	float: left;
+	height: auto;
+	width: 150px;
+}
+
+div#main{
+	float: left;
+	height: auto;
+}
+
+div#footer{
+	background-color: #c0c0c0;
+	display: table;
+	clear: left;
+	width: 100%;
+}
+
+.center{
+	text-align: center;
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.bottom{
+	text-align: center;
+	display: table-cell;
+	vertical-align: bottom;
+}
+
+.child{
+	display: inline-block;
+}
+
+.layout{
+	display: flex;
+	flex-direction: column;
+	min-height: 100lvh;
+}

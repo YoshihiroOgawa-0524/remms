@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="layout(body)">
+	<head>
+		<meta charset="UTF-8" />
+		<link th:href="@{/css/layout.css}" rel="stylesheet" />
+		<link th:href="@{/css/style.css}" rel="stylesheet" />
+		<title>REMS</title>
+	</head>
+	<body>
+		<div class="layout">
+			<div>
+				<div th:replace="~{common/header::layout-header}"></div>
+			</div>
+			<div id="container">
+			<div id="sidebar" th:replace="~{common/sidebar::layout-sidebar}"></div>
+				<div id="main" th:replace="${body}"></div>
+			</div>
+			<div th:replace="~{common/footer::layout-footer}"></div>
+		</div>
+	</body>
+</html>
