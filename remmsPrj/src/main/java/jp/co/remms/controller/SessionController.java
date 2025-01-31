@@ -70,15 +70,20 @@ public class SessionController {
 				// 入力されたパスワードでユーザ情報のパスワードとチェック
 				if(hash.equals(user.getPassword())) {
 					String ContractKey = (String)this.session.getAttribute("contractKey");
-					// 契約者が管理者
-					if(ContractKey.equals("admin")) {
-						model.addAttribute("contracts", contractRepository.findAll());
-						return "contract_list";
-					// 契約者は一般の契約者
-					} else {
-						Integer ContractId = (Integer)this.session.getAttribute("contractId");
-						model.addAttribute("customers", customerRepository.findByContractId(ContractId));
-						return "customer_list";
+					// sessionが有効
+					if(ContractKey != null) {
+						// 契約者が管理者
+						if(ContractKey.equals("admin")) {
+							model.addAttribute("contracts", contractRepository.findAll());
+							return "contract_list";
+							// 契約者は一般の契約者
+						} else {
+							Integer ContractId = (Integer)this.session.getAttribute("contractId");
+							model.addAttribute("customers", customerRepository.findByContractId(ContractId));
+							return "customer_list";
+						}
+					}else {
+						return "noSession";
 					}
 				}
 			} catch (NoSuchAlgorithmException e) {

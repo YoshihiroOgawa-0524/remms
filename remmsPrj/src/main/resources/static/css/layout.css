@@ -1,9 +1,8 @@
 @charset "UTF-8";
 
-div#header{
-	background-color: #c0c0c0;
-	display: table;
-	width: 100%
+body{
+	margin: 0;
+	min-height: 100vh;
 }
 
 div#container{
@@ -11,19 +10,19 @@ div#container{
 }
 
 div#sidebar{
-	background-color: #808080;
+	background-color: #40e0d0;
 	float: left;
-	height: auto;
 	width: 150px;
+	min-height: 100vh;
 }
 
 div#main{
-	float: left;
-	height: auto;
+	float: right;
+	min-height: 100vh;
 }
 
 div#footer{
-	background-color: #c0c0c0;
+	background-color: #7cfc00;
 	display: table;
 	clear: left;
 	width: 100%;
