@@ -8,4 +8,6 @@ import jp.co.remms.entity.Contract;
 
 public interface ContractRepository extends JpaRepository<Contract, Integer> {
 	Contract findByContractKey(String contract_key);
+	
+	Contract findByDeleteDateIsNullOrderByContractDateDesc();
 }

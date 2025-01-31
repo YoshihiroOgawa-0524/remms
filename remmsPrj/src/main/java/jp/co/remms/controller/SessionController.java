@@ -74,12 +74,13 @@ public class SessionController {
 					if(ContractKey != null) {
 						// 契約者が管理者
 						if(ContractKey.equals("admin")) {
-							model.addAttribute("contracts", contractRepository.findAll());
+//							model.addAttribute("contracts", contractRepository.findAll());
+							model.addAttribute("contracts", contractRepository.findByDeleteDateIsNullOrderByContractDateDesc());
 							return "contract_list";
 							// 契約者は一般の契約者
 						} else {
 							Integer ContractId = (Integer)this.session.getAttribute("contractId");
-							model.addAttribute("customers", customerRepository.findByContractId(ContractId));
+							model.addAttribute("customers", customerRepository.findByContractIdAndDeleteDateIsNullOrderByCustomerKana(ContractId));
 							return "customer_list";
 						}
 					}else {

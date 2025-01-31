@@ -34,6 +34,8 @@
 table{
 	border-collapse: collapse;
 	border: solid;
+	min-width: 85vh;
+	margin: 0 auto;
 }
 
 th{
@@ -41,6 +43,7 @@ th{
 	height: 2em;
 	padding: 0;
 	background-color: aqua;
+	text-align: center;
 }
 
 td{

@@ -1,17 +1,17 @@
 <meta charset="UTF-8" />
 <div id="sidebar" th:fragment="layout-sidebar">
 	<div class="center">
-		<nav th:if="${session.contractKey == 'admin'}">
+		<div th:if="${session.contractKey == 'admin'}">
 			<button class="button1" type="button" onclick="location.href='contract_list'">契約者管理</button>
-		</nav>
-		<nav th:unless="${session.contractKey == 'admin'}">
+		</div>
+		<div th:unless="${session.contractKey == 'admin'}">
 			<button class="button1" type="button" onclick="location.href='user_list'">ユーザ管理</button>
 			<button class="button1" type="button" onclick="location.href='customer_list'">&nbsp顧客管理&nbsp</button>
 			<button class="button1" type="button" onclick="location.href='estate_list'">不動産管理</button>
 			<button class="button1" type="button" onclick="location.href='member_list'">会員権管理</button>
-		</nav>
-		<nav>
+		</div>
+		<div>
 			<button class="button1" type="button" onclick="location.href='logout'">ログアウト</button>
-		</nav>
+		</div>
 	</div>
 </div>
