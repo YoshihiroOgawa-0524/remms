@@ -32,7 +32,6 @@
 }
 
 table{
-/*	width: 100%;*/
 	border-collapse: collapse;
 	border: solid;
 }
@@ -41,10 +40,15 @@ th{
 	border: solid thin;
 	height: 2em;
 	padding: 0;
+	background-color: aqua;
 }
 
 td{
 	border: solid thin;
 	height: 1.4em;
 	padding: 0;
+}
+
+h1{
+	text-align: center;
 }
