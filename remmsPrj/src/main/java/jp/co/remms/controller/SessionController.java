@@ -24,13 +24,16 @@ import jp.co.remms.repository.UserRepository;
 @Controller
 public class SessionController {
 	private HttpSession session;
-
-	@Autowired
 	public SessionController(HttpSession session) {
 		this.session = session;
 	}
+
 	@Autowired
 	ContractRepository contractRepository;
+	@Autowired
+	UserRepository userRepository;
+	@Autowired
+	CustomerRepository customerRepository;
 
 	@GetMapping("/login/{id}")
 	public String login(@PathVariable("id") String contractKey, Model model) {
@@ -53,9 +56,6 @@ public class SessionController {
 		return "noContract";
 	}
 
-	@Autowired
-	UserRepository userRepository;
-	CustomerRepository customerRepository;
 	@RequestMapping(path = "/doLogin", method = RequestMethod.POST)
 	public String doLoginGet(String userId, String password, Model model) {
 		// 入力されたユーザIDにて、ユーザ情報を取得
@@ -72,9 +72,10 @@ public class SessionController {
 					String ContractKey = (String)this.session.getAttribute("contractKey");
 					// sessionが有効
 					if(ContractKey != null) {
+						this.session.setAttribute("userId", user.getId());
+						System.out.println("USER ID:" + this.session.getAttribute("userId"));
 						// 契約者が管理者
 						if(ContractKey.equals("admin")) {
-//							model.addAttribute("contracts", contractRepository.findAll());
 							model.addAttribute("contracts", contractRepository.findByDeleteDateIsNullOrderByContractDateDesc());
 							return "contract_list";
 							// 契約者は一般の契約者
@@ -92,7 +93,7 @@ public class SessionController {
 			}
 		}
 		// ユーザが存在しない場合、ログイン画面を再表示
-		String contractKey = (String)this.session.getAttribute("contractKey");
+		String contractKey = (String)session.getAttribute("contractKey");
 		model.addAttribute("contract", contractRepository.findByContractKey(contractKey));
 		return "session/login";
 	}

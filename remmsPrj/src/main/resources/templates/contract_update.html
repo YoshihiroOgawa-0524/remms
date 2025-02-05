@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{common/layout::layout(~{::body/content()})}">
+	<head>
+		<meta charset="UTF-8">
+	</head>
+
+	<body>
+		<div id="main">
+			<h1>契約者更新</h1>
+			<form action="/contract/update" method="POST">
+				<div>
+					契約者ID：<input type="text" name="key" th:value="${contract.contractKey}" />
+				</div>
+				<div>
+					契約日：<input type="date" name="date" th:value="${contract.contractDate}" />
+				</div>
+				<div>
+					契約者名：<input type="text" name="name" th:value="${contract.contractName}" />
+				</div>
+				<div>
+					契約者名ｶﾅ：<input type="text" name="kana" th:value="${contract.contractKana}" />
+				</div>
+				<div>
+					郵便番号：<input type="text" id="zip" name="zip" onBlur="search()" th:value="${contract.zip}" />
+				</div>
+				<div>
+					都道府県：
+					<select id="pref" name="pref" th:value="${contract.pref}">
+						<option th:each="pref: ${prefs}" th:value="${pref.code}" th:text="${pref.name}"></option>
+					</select>
+				</div>
+				<div>
+					市区町村：<input type="text" id="city" name="city" th:value="${contract.city}" />
+				</div>
+				<div>
+					その他番地：<input type="text" id="address" name="address" th:value="${contract.address}" />
+				</div>
+				<div>
+					ビル・マンション名等：<input type="text" id="otherAddress" name="otherAddress" th:value="${contract.otherAddress}" />
+				</div>
+				<div>
+					連絡先：<input type="text" name="tel" th:value="${contract.tel}" />
+				</div>
+				<div>
+					メールアドレス：<input type="email" name="email" th:value="${contract.email}" />
+				</div>
+				<button class="button1" type="submit">更新</button>
+			</form>
+		</div>
+		<script type="text/javascript" th:inline="javascript">
+		/*<![CDATA[*/
+			$(window).on('load', function(){
+				$('#pref').val(/*[[ ${contract.pref} ]]*/);
+			})
+
+			const search_url = 'https://zipcloud.ibsnet.co.jp/api/search';
+			function search(){
+				let zip = $('#zip').val();
+				if(zip != null){
+					zip = zip.replace('-', '');
+					let address = '';
+					$.ajax(
+						{
+							url: search_url,
+							type: 'get',
+							dataType: 'json',
+							data: {
+								zipcode: zip
+							}
+						}
+					).done(
+						function(response){
+							var results = response.results;
+							if(results == null || results.length == 0){
+								$('#zip').css('color', 'red');
+								alert(response.message);
+							} else {
+								const element = results[0];
+								if ((element.prefcode).length == 1){
+									prefcd = '0' + element.prefcode;
+								} else {
+									prefcd = element.prefcode;
+								}
+								$('#zip').css('color', 'black');
+								$('#pref').val(prefcd);
+								$('#city').val(element.address2);
+								$('#address').val(element.address3);
+							}
+						}
+					)
+				}
+			}
+		/*]]>*/
+		</script>
+	</body>
+</html>

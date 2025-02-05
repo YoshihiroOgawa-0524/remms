@@ -21,6 +21,16 @@
 	border-radius: 5px;
 }
 
+.button1:disabled{
+	filter:brightness(0.8);
+	cursor:not-allowed;
+}
+
+.button1:active{
+	transform:translate(3px, 3px);
+	box-shadow:non;
+}
+
 .button1:hover{
 	background-color: orange;
 	color: white;

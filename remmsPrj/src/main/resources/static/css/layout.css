@@ -9,15 +9,16 @@ div#container{
 }
 
 div#sidebar{
-	background-color: #40e0d0;
+	background-color: #7cfc00;
 	float: left;
 	width: 150px;
-	min-height: 95vh;
+	min-height: 94vh;
 }
 
 div#main{
 	float: left;
-	min-height: 95vh;
+	min-height: 94vh;
+	min-width: 95vh;
 }
 
 div#footer{

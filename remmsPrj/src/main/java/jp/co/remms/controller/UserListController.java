@@ -22,6 +22,7 @@ public class UserListController {
 	}
 	@Autowired
 	ContractRepository contractRepository;
+	@Autowired
 	UserRepository userRepository;
 
 	@RequestMapping(path = "/user_list", method = RequestMethod.GET)

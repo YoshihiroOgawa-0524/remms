@@ -1,5 +1,8 @@
 package jp.co.remms.entity;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,58 +18,67 @@ public class Contract {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_contracts_gen")
 	@SequenceGenerator(name = "seq_contracts_gen", sequenceName = "seq_contracts", allocationSize = 1)
-	private Integer id;
+	private Long id;
 	
-	@Column
+	@Column(name = "contract_key")
 	private String contractKey;
 	
-	@Column
+	@Column(name = "contract_name")
 	private String contractName;
 	
-	@Column
+	@Column(name = "contract_kana")
 	private String contractKana;
 	
-	@Column
-	private String contractDate;
+	@Column(name = "contract_date")
+	private LocalDate contractDate;
 	
-	@Column
+	@Column(name = "zip")
 	private String zip;
 	
-	@Column
+	@Column(name = "pref")
 	private String pref;
 	
-	@Column
-	private String address1;
+	@Column(name = "city")
+	private String city;
 	
-	@Column
-	private String address2;
+	@Column(name = "address")
+	private String address;
 	
-	@Column
+	@Column(name = "other_address")
+	private String otherAddress;
+	
+	@Column(name = "tel")
 	private String tel;
+
+	@Column(name = "email")
+	private String email;
+
+	@Column(name = "contract_limit")
+	private LocalDate contractLimit;
+
+	@Column(name = "create_date")
+	private Timestamp createDate;
 	
-	@Column
-	private String createDate;
+	@Column(name = "update_date")
+	private Timestamp updateDate;
 	
-	@Column
-	private String updateDate;
+	@Column(name = "delete_date")
+	private Timestamp deleteDate;
 	
-	@Column
-	private String deleteDate;
-	
-	@Column
+	@Column(name = "create_user")
 	private Integer createUser;
 	
-	@Column
+	@Column(name = "update_user")
 	private Integer updateUser;
 	
-	@Column
+	@Column(name = "delete_user")
 	private Integer deleteUser;
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 	
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	
@@ -94,11 +106,11 @@ public class Contract {
 		this.contractKana = contract_kana;
 	}
 
-	public String getContractDate() {
+	public LocalDate getContractDate() {
 		return contractDate;
 	}
 	
-	public void setContractDate(String contract_date) {
+	public void setContractDate(LocalDate contract_date) {
 		this.contractDate = contract_date;
 	}
 
@@ -118,20 +130,28 @@ public class Contract {
 		this.pref = pref;
 	}
 
-	public String getAddress1() {
-		return address1;
+	public String getCity() {
+		return city;
 	}
 	
-	public void setAddress1(String address_1) {
-		this.address1 = address_1;
+	public void setCity(String city) {
+		this.city = city;
 	}
 
-	public String getAddress2() {
-		return address2;
+	public String getAddress() {
+		return address;
 	}
 	
-	public void setAddress2(String address_2) {
-		this.address2 = address_2;
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getOtherAddress() {
+		return otherAddress;
+	}
+	
+	public void setOtherAddress(String other_address) {
+		this.otherAddress = other_address;
 	}
 
 	public String getTel() {
@@ -142,27 +162,43 @@ public class Contract {
 		this.tel = tel;
 	}
 
-	public String getCreateDate() {
+	public String getEmail() {
+		return email;
+	}
+	
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public LocalDate getContractLimit() {
+		return contractLimit;
+	}
+	
+	public void setContractLimit(LocalDate contract_limit) {
+		this.contractLimit = contract_limit;
+	}
+
+	public Timestamp getCreateDate() {
 		return createDate;
 	}
 	
-	public void setCreateDate(String create_date) {
+	public void setCreateDate(Timestamp create_date) {
 		this.createDate = create_date;
 	}
 
-	public String getUpdateDate() {
+	public Timestamp getUpdateDate() {
 		return updateDate;
 	}
 	
-	public void setUpdateDate(String update_date) {
+	public void setUpdateDate(Timestamp update_date) {
 		this.updateDate = update_date;
 	}
 
-	public String getDeleteDate() {
+	public Timestamp getDeleteDate() {
 		return deleteDate;
 	}
 	
-	public void setDeleteDate(String delete_date) {
+	public void setDeleteDate(Timestamp delete_date) {
 		this.deleteDate = delete_date;
 	}
 
