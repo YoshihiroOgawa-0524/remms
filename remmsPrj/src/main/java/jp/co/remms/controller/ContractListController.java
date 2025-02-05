@@ -2,7 +2,10 @@ package jp.co.remms.controller;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import jakarta.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +20,6 @@ import jp.co.remms.form.ContractForm;
 import jp.co.remms.repository.ContractRepository;
 import jp.co.remms.repository.PrefRepository;
 
-
-
 @Controller
 public class ContractListController {
 	private HttpSession session;
@@ -30,10 +31,57 @@ public class ContractListController {
 	ContractRepository contractRepository;
 	@Autowired
 	PrefRepository prefRepository;
+	@Autowired
+	EntityManager entityManager;
 
 	@RequestMapping(path = "/contract_list", method = RequestMethod.GET)
 	public String contractList(Model model) {
 		model.addAttribute("contracts", contractRepository.findByDeleteDateIsNullOrderByContractDateDesc());
+		return "contract_list";
+	}
+
+	@RequestMapping(path = "/contract_search", method = RequestMethod.POST)
+	public String contractSearch(ContractForm form, Model model) {
+		String key = "%%";
+		DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+		LocalDate fromD = LocalDate.parse("1900/01/01", f);
+		LocalDate toD = LocalDate.parse("9999/12/31", f);
+		LocalDate fromL = LocalDate.parse("1900/01/01", f);
+		LocalDate toL = LocalDate.parse("9999/12/31", f);
+		String name = "%%";
+		String kana = "%%";
+		if(form.getSearchKey() != null) {
+			if(form.getSearchKey() != null) {
+				key = "%" + form.getSearchKey() + "%";
+			}
+		}
+		if(form.getFromDate() != null) {
+			fromD = form.getFromDate();
+		}
+		if(form.getToDate() != null) {
+			toD = form.getToDate();
+		}
+		if(form.getFromLimit() != null) {
+			fromL = form.getFromLimit();
+		}
+		if(form.getToLimit() != null) {
+			toL = form.getToLimit();
+		}
+		if(form.getSearchName() != null) {
+			name = "%" + form.getSearchName() + "%";
+		}
+		if(form.getSearchKana() != null) {
+			name = "%" + form.getSearchKana() + "%";
+		}
+		Query query = entityManager.createNamedQuery("findBySearchQuery");
+		query.setParameter("key", key);
+		query.setParameter("fromDay", fromD);
+		query.setParameter("toDay", toD);
+		query.setParameter("fromLimit", fromL);
+		query.setParameter("toLimit", toL);
+		query.setParameter("name", name);
+		query.setParameter("kana", kana);
+		model.addAttribute("contracts", query.getResultList());
 		return "contract_list";
 	}
 
@@ -117,7 +165,7 @@ public class ContractListController {
 
 	@RequestMapping(path = "/contract/delete/{key}", method = RequestMethod.GET)
 	public String contractDelete(@PathVariable("key") String key, Model model) {
-		Contract contract = contractRepository.findByContractKey(key);
+		Contract contract = contractRepository.findByContractKeyAndDeleteDateIsNull(key);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		Integer userId = (Integer)this.session.getAttribute("userId");
 
