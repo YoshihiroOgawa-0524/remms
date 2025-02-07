@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,7 +44,7 @@ public class ContractListController {
 	}
 
 	@PostMapping("/contract_search")
-	public String contractSearch(@Valid ContractSearchForm form, Model model) {
+	public String contractSearch(ContractSearchForm form, Model model) {
 		DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 		LocalDate fromD = LocalDate.parse("1900/01/01", f);
 		LocalDate toD = LocalDate.parse("9999/12/31", f);
@@ -61,11 +62,6 @@ public class ContractListController {
 		if(form.getToLimit() != null) {
 			toL = form.getToLimit();
 		}
-//		System.out.println("key:" + form.getSearchKey());
-//		System.out.println("fromD:" + fromD + " ,toD:" + toD);
-//		System.out.println("fromL:" + fromL + " ,toL:" + toL);
-//		System.out.println("Name:" + form.getSearchName());
-//		System.out.println("Kana:" + form.getSearchKana());
 		Query query = entityManager.createNamedQuery("findByContractSearchQuery");
 		query.setParameter("key", "%" + form.getSearchKey() + "%");
 		query.setParameter("fromDay", fromD);
@@ -79,13 +75,16 @@ public class ContractListController {
 	}
 
 	@GetMapping("/contract_create")
-	public String contractCreate(Model model) {
+	public String contractCreate(ContractDetailForm form, Model model) {
 		model.addAttribute("prefs", prefRepository.findAll());
 		return "contract_create";
 	}
 
 	@PostMapping("/contract/insert")
-	public String contractInsert(ContractDetailForm form, Model model) {
+	public String contractInsert(@Valid ContractDetailForm form, BindingResult result, Model model) {
+		if(result.hasErrors()) {
+			return "contract_create";
+		}
 		Contract chk = contractRepository.findByContractKeyAndDeleteDateIsNull(form.getKey());
 		if(chk != null) {
 			model.addAttribute("ErrMsg", "契約IDが既に登録されています。");
@@ -118,14 +117,17 @@ public class ContractListController {
 	}
 
 	@GetMapping("/contract/detail/{key}")
-	public String contractDetail(@PathVariable("key") String key,  Model model) {
+	public String contractDetail(@PathVariable("key") String key, ContractDetailForm form,  Model model) {
 		model.addAttribute("prefs", prefRepository.findAll());
 		model.addAttribute("contract", contractRepository.findByContractKeyAndDeleteDateIsNull(key));
 		return "contract_update";
 	}
 
 	@PostMapping("/contract/update")
-	public String contractUpdate(ContractDetailForm form, Model model) {
+	public String contractUpdate(@Valid ContractDetailForm form, BindingResult result, Model model) {
+		if(result.hasErrors()) {
+			return "contract_update";
+		}
 		Contract contract = contractRepository.findByContractKeyAndDeleteDateIsNull(form.getKey());
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		Integer userId = (Integer)this.session.getAttribute("userId");

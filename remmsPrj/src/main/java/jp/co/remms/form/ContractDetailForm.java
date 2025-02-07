@@ -2,19 +2,51 @@ package jp.co.remms.form;
 
 import java.time.LocalDate;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+
 public class ContractDetailForm {
 
 	private Integer id;
+
+	@NotNull
+	@Max(16)
+	@Pattern(regexp = "^[a-zA-Z0-9]+$")
 	private String key;
+
+	@NotNull
 	private LocalDate date;
+
+	@NotNull
+	@Max(32)
 	private String name;
+
+	@NotNull
+	@Max(32)
 	private String kana;
+
+	@Max(7)
 	private String zip;
+
+	@NotNull
+	@Max(2)
 	private String pref;
+
+	@Max(32)
 	private String city;
+
+	@Max(32)
 	private String address;
+
+	@Max(64)
 	private String otherAddress;
+
+	@Max(16)
 	private String tel;
+
+	@Max(256)
+	@Pattern(regexp = "/^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$/")
 	private String email;
 
 	public Integer getId() {

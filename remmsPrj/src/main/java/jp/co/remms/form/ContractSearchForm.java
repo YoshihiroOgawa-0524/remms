@@ -2,22 +2,14 @@ package jp.co.remms.form;
 
 import java.time.LocalDate;
 
-import jakarta.validation.constraints.Size;
-
 public class ContractSearchForm {
 	
-	@Size(max = 16)
 	private String searchKey;
-
 	private LocalDate fromDate;
 	private LocalDate toDate;
 	private LocalDate fromLimit;
 	private LocalDate toLimit;
-
-	@Size(max = 64)
 	private String searchName;
-
-	@Size(max = 64)
 	private String searchKana;
 
 	public String getSearchKey() {
