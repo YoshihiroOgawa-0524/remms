@@ -14,8 +14,8 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "contracts")
-
-@NamedQuery(name="findBySearchQuery", query="SELECT c FROM Contract c WHERE c.contractKey LIKE :key AND c.contractDate BETWEEN :fromDay AND :toDay AND c.contractLimit BETWEEN :fromLimit AND :toLimit AND c.contractName LIKE :name AND c.contractKana LIKE :kana AND c.deleteDate IS NULL")
+//@NamedQuery(name="findByContractSearchQuery", query="SELECT c FROM Contract c WHERE c.contractKey LIKE :key AND c.contractDate BETWEEN :fromDay AND :toDay AND c.contractLimit BETWEEN :fromLimit AND :toLimit AND c.contractName LIKE :name AND c.contractKana LIKE :kana AND c.deleteDate IS NULL ORDER BY c.contractDate DESC")
+@NamedQuery(name="findByContractSearchQuery", query="SELECT c FROM Contract c WHERE c.contractKey LIKE :key AND c.contractDate BETWEEN :fromDay AND :toDay AND c.contractLimit BETWEEN :fromLimit AND :toLimit AND c.contractName LIKE :name AND c.contractKana LIKE :kana AND c.deleteDate IS NULL ORDER BY c.contractDate DESC")
 
 public class Contract {
 	@Id

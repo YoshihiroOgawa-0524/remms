@@ -7,7 +7,7 @@
 	<body>
 		<div id="main">
 			<h1>契約者新規登録</h1>
-			<form action="contract/insert" method="POST">
+			<form th:action="@{/contract/insert}" method="POST">
 				<div>
 					契約者ID：<input type="text" name="key" />
 				</div>
@@ -45,6 +45,7 @@
 					メールアドレス：<input type="email" name="email" />
 				</div>
 				<button class="button1" type="submit">登録</button>
+				<button class="button1" type="button" onclick="history.back()">戻る</button>
 			</form>
 		</div>
 		<script>

@@ -6,22 +6,21 @@
 	<body>
 		<div id="main">
 			<h1>契約管理</h1>
-			<form action="contract_search" method="POST">
+			<form th:action="@{/contract_search}" th:object="${contractSearchForm}" method="POST">
 				<div>
-					契約ID：<input type="text" name="search_key" />
+					契約ID：<input type="text" th:field="*{searchKey}" />
 				</div>
 				<div>
-					契約日：<input type="date" name="from_date" />～<input type="date" name="to_date" />
+					契約日：<input type="date" th:field="*{fromDate}" />～<input type="date" th:field="*{toDate}" />
+					契約満了日：<input type="date" th:field="*{fromLimit}" />～<input type="date" th:field="*{toLimit}" />
 				</div>
 				<div>
-					契約満了日：<input type="date" name="from_limit" />～<input type="date" name="to_limit" />
-				</div>
-				<div>
-					契約名：<input type="text" name="search_name" />
-					契約名ｶﾅ：<input type="text" name="search_kana" />
+					契約名：<input type="text" th:field="*{searchName}" />
+					契約名ｶﾅ：<input type="text" th:field="*{searchKana}" />
 				</div>
 				<div class="right">
-					<button class="button1" type="submit">検索</button>
+					<input type="button" class="button1" id="clear" value="クリア" />
+					<input type="submit" class="button1" value="検索" />
 				</div>
 			</form>
 			<div>
@@ -54,6 +53,17 @@
 		</div>
 		<script>
 			$(document).ready(function(){
+				$('#clear').click(function(){
+					$('#searchKey').val("");
+					$('#fromDate').val("");
+					$('#toDate').val("");
+					$('#fromLimit').val("");
+					$('#toLimit').val("");
+					$('#searchName').val("");
+					$('#searchKana').val("");
+					window.location.href = "/contract_list";
+				})
+
 				$('.checks').click(function(){
 					$('#update').prop('disabled', false);
 					$('#delete').prop('disabled', false);

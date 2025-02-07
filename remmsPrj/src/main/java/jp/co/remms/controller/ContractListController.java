@@ -7,16 +7,18 @@ import java.time.format.DateTimeFormatter;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import jp.co.remms.entity.Contract;
-import jp.co.remms.form.ContractForm;
+import jp.co.remms.form.ContractDetailForm;
+import jp.co.remms.form.ContractSearchForm;
 import jp.co.remms.repository.ContractRepository;
 import jp.co.remms.repository.PrefRepository;
 
@@ -34,27 +36,19 @@ public class ContractListController {
 	@Autowired
 	EntityManager entityManager;
 
-	@RequestMapping(path = "/contract_list", method = RequestMethod.GET)
-	public String contractList(Model model) {
+	@GetMapping("/contract_list")
+	public String contractList(ContractSearchForm form, Model model) {
 		model.addAttribute("contracts", contractRepository.findByDeleteDateIsNullOrderByContractDateDesc());
 		return "contract_list";
 	}
 
-	@RequestMapping(path = "/contract_search", method = RequestMethod.POST)
-	public String contractSearch(ContractForm form, Model model) {
-		String key = "%%";
+	@PostMapping("/contract_search")
+	public String contractSearch(@Valid ContractSearchForm form, Model model) {
 		DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 		LocalDate fromD = LocalDate.parse("1900/01/01", f);
 		LocalDate toD = LocalDate.parse("9999/12/31", f);
 		LocalDate fromL = LocalDate.parse("1900/01/01", f);
 		LocalDate toL = LocalDate.parse("9999/12/31", f);
-		String name = "%%";
-		String kana = "%%";
-		if(form.getSearchKey() != null) {
-			if(form.getSearchKey() != null) {
-				key = "%" + form.getSearchKey() + "%";
-			}
-		}
 		if(form.getFromDate() != null) {
 			fromD = form.getFromDate();
 		}
@@ -67,32 +61,31 @@ public class ContractListController {
 		if(form.getToLimit() != null) {
 			toL = form.getToLimit();
 		}
-		if(form.getSearchName() != null) {
-			name = "%" + form.getSearchName() + "%";
-		}
-		if(form.getSearchKana() != null) {
-			name = "%" + form.getSearchKana() + "%";
-		}
-		Query query = entityManager.createNamedQuery("findBySearchQuery");
-		query.setParameter("key", key);
+//		System.out.println("key:" + form.getSearchKey());
+//		System.out.println("fromD:" + fromD + " ,toD:" + toD);
+//		System.out.println("fromL:" + fromL + " ,toL:" + toL);
+//		System.out.println("Name:" + form.getSearchName());
+//		System.out.println("Kana:" + form.getSearchKana());
+		Query query = entityManager.createNamedQuery("findByContractSearchQuery");
+		query.setParameter("key", "%" + form.getSearchKey() + "%");
 		query.setParameter("fromDay", fromD);
 		query.setParameter("toDay", toD);
 		query.setParameter("fromLimit", fromL);
 		query.setParameter("toLimit", toL);
-		query.setParameter("name", name);
-		query.setParameter("kana", kana);
+		query.setParameter("name", "%" + form.getSearchName() + "%");
+		query.setParameter("kana", "%" + form.getSearchKana() + "%");
 		model.addAttribute("contracts", query.getResultList());
 		return "contract_list";
 	}
 
-	@RequestMapping(path = "/contract_create", method = RequestMethod.GET)
+	@GetMapping("/contract_create")
 	public String contractCreate(Model model) {
 		model.addAttribute("prefs", prefRepository.findAll());
 		return "contract_create";
 	}
 
-	@RequestMapping(path = "/contract/insert", method = RequestMethod.POST)
-	public String contractInsert(ContractForm form, Model model) {
+	@PostMapping("/contract/insert")
+	public String contractInsert(ContractDetailForm form, Model model) {
 		Contract chk = contractRepository.findByContractKeyAndDeleteDateIsNull(form.getKey());
 		if(chk != null) {
 			model.addAttribute("ErrMsg", "契約IDが既に登録されています。");
@@ -124,15 +117,15 @@ public class ContractListController {
 		return "contract_list";
 	}
 
-	@RequestMapping(path = "/contract/detail/{key}", method = RequestMethod.GET)
+	@GetMapping("/contract/detail/{key}")
 	public String contractDetail(@PathVariable("key") String key,  Model model) {
 		model.addAttribute("prefs", prefRepository.findAll());
 		model.addAttribute("contract", contractRepository.findByContractKeyAndDeleteDateIsNull(key));
 		return "contract_update";
 	}
 
-	@RequestMapping(path = "/contract/update", method = RequestMethod.POST)
-	public String contractUpdate(ContractForm form, Model model) {
+	@PostMapping("/contract/update")
+	public String contractUpdate(ContractDetailForm form, Model model) {
 		Contract contract = contractRepository.findByContractKeyAndDeleteDateIsNull(form.getKey());
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		Integer userId = (Integer)this.session.getAttribute("userId");
@@ -143,6 +136,7 @@ public class ContractListController {
 			limitDay = contract.getContractDate();
 		}
 
+		System.out.println("key:" + form.getKey() + " date:" + form.getDate());
 		contract.setContractKey(form.getKey());
 		contract.setContractDate(form.getDate());
 		contract.setContractName(form.getName());
@@ -163,7 +157,7 @@ public class ContractListController {
 		return "contract_list";
 	}
 
-	@RequestMapping(path = "/contract/delete/{key}", method = RequestMethod.GET)
+	@GetMapping("/contract/delete/{key}")
 	public String contractDelete(@PathVariable("key") String key, Model model) {
 		Contract contract = contractRepository.findByContractKeyAndDeleteDateIsNull(key);
 		Timestamp now = new Timestamp(System.currentTimeMillis());

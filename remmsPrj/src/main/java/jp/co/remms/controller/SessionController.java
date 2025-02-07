@@ -5,17 +5,20 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import jp.co.remms.entity.Contract;
 import jp.co.remms.entity.User;
+import jp.co.remms.form.ContractSearchForm;
+import jp.co.remms.form.LoginForm;
 import jp.co.remms.repository.ContractRepository;
 import jp.co.remms.repository.CustomerRepository;
 import jp.co.remms.repository.UserRepository;
@@ -36,7 +39,7 @@ public class SessionController {
 	CustomerRepository customerRepository;
 
 	@GetMapping("/login/{id}")
-	public String login(@PathVariable("id") String contractKey, Model model) {
+	public String login(@PathVariable("id") String contractKey, LoginForm form, Model model) {
 		// session情報のクリア
 		this.session.setAttribute("contractName", null);
 		this.session.setAttribute("contractKey", null);
@@ -49,22 +52,25 @@ public class SessionController {
 			this.session.setAttribute("contractKey", contract.getContractKey());
 			this.session.setAttribute("contractId", contract.getId());
 			// 契約keyにて契約情報を再取得
-			model.addAttribute("contract", contractRepository.findByContractKey(contractKey));
+			model.addAttribute("contractName", contract.getContractName());
 			return (String) "session/login";
 		}
 		// 契約情報が未取得の場合、エラー画面を表示
 		return "noContract";
 	}
 
-	@RequestMapping(path = "/doLogin", method = RequestMethod.POST)
-	public String doLoginGet(String userId, String password, Model model) {
+	@PostMapping("/doLogin")
+	public String doLoginGet(@Valid LoginForm form, ContractSearchForm form1, BindingResult result, Model model) {
+		if(result.hasErrors()) {
+			return "session/login";
+		}
 		// 入力されたユーザIDにて、ユーザ情報を取得
-		User user = userRepository.findByUserId(userId);
+		User user = userRepository.findByUserId(form.getUserId());
 		// ユーザが存在した場合
 		if(user != null) {
 			try {
 				MessageDigest md = MessageDigest.getInstance("SHA-256");
-				md.update(password.getBytes());
+				md.update(form.getPassword().getBytes());
 				byte[] hashBytes = md.digest();
 				String hash = Base64.getEncoder().encodeToString(hashBytes);
 				// 入力されたパスワードでユーザ情報のパスワードとチェック
@@ -73,12 +79,11 @@ public class SessionController {
 					// sessionが有効
 					if(ContractKey != null) {
 						this.session.setAttribute("userId", user.getId());
-						System.out.println("USER ID:" + this.session.getAttribute("userId"));
 						// 契約者が管理者
 						if(ContractKey.equals("admin")) {
 							model.addAttribute("contracts", contractRepository.findByDeleteDateIsNullOrderByContractDateDesc());
 							return "contract_list";
-							// 契約者は一般の契約者
+						// 契約者は一般の契約者
 						} else {
 							Integer ContractId = (Integer)this.session.getAttribute("contractId");
 							model.addAttribute("customers", customerRepository.findByContractIdAndDeleteDateIsNullOrderByCustomerKana(ContractId));
@@ -94,11 +99,12 @@ public class SessionController {
 		}
 		// ユーザが存在しない場合、ログイン画面を再表示
 		String contractKey = (String)session.getAttribute("contractKey");
-		model.addAttribute("contract", contractRepository.findByContractKey(contractKey));
+		Contract contract = contractRepository.findByContractKey(contractKey);
+		model.addAttribute("contractName", contract.getContractName());
 		return "session/login";
 	}
 
-	@RequestMapping(path = "/logout", method = RequestMethod.GET)
+	@GetMapping("/logout")
 	public String doLogoutGet() {
 		return (String)"redirect:login/" + this.session.getAttribute("contractKey");
 	}

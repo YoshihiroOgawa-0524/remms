@@ -7,7 +7,7 @@
 	<body>
 		<div id="main">
 			<h1>契約者更新</h1>
-			<form action="/contract/update" method="POST">
+			<form th:action="@{/contract/update}" method="POST">
 				<div>
 					契約者ID：<input type="text" name="key" th:value="${contract.contractKey}" />
 				</div>
@@ -45,6 +45,7 @@
 					メールアドレス：<input type="email" name="email" th:value="${contract.email}" />
 				</div>
 				<button class="button1" type="submit">更新</button>
+				<button class="button1" type="button" onclick="history.back()">戻る</button>
 			</form>
 		</div>
 		<script type="text/javascript" th:inline="javascript">

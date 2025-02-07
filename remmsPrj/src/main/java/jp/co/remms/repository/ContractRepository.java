@@ -12,4 +12,5 @@ public interface ContractRepository extends JpaRepository<Contract, Integer> {
 	List<Contract> findByDeleteDateIsNullOrderByContractDateDesc();
 	
 	Contract findByContractKeyAndDeleteDateIsNull(String contract_key);
+
 }
