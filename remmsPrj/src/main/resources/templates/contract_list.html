@@ -79,16 +79,14 @@
 
 				$('#update').click(function(){
 					var value = $("input[name='chk']:checked").val();
-					var href = "/contract/detail/" + value;
+					var href = "/contract/change/" + value;
 					window.location.href = href;
 				})
 
 				$('#delete').click(function(){
-					if(confirm("削除しても宜しいですか？")){
-						var value = $("input[name='chk']:checked").val();
-						var href = "/contract/delete/" + value;
-						window.location.href = href;
-					}
+					var value = $("input[name='chk']:checked").val();
+					var href = "/contract/destroy/" + value;
+					window.location.href = href;
 				})
 			});
 		</script>

@@ -1,92 +1,79 @@
 package jp.co.remms.form;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
-public class ContractDetailForm {
+public class ContractDetailForm implements Serializable {
 
-	private Integer id;
-
-	@NotNull
-	@Max(16)
-	@Pattern(regexp = "^[a-zA-Z0-9]+$")
-	private String key;
+	@NotBlank
+	@Pattern(regexp = "/^[a-zA-Z0-9]", message = "契約IDは半角英数で入力してください")
+	private String contractKey;
 
 	@NotNull
-	private LocalDate date;
+	private LocalDate contractDate;
 
-	@NotNull
-	@Max(32)
-	private String name;
+	@NotBlank
+	private String contractName;
 
-	@NotNull
-	@Max(32)
-	private String kana;
+	@NotBlank
+	private String contractKana;
 
-	@Max(7)
+	@Size(min = 7, max = 7, message = "郵便番号を半角数字7桁で入力してください")
 	private String zip;
 
-	@NotNull
-	@Max(2)
 	private String pref;
 
-	@Max(32)
+	@Size(max = 32, message = "市区町村名を32文字以内で入力してください")
 	private String city;
 
-	@Max(32)
+	@Size(max = 32, message = "残りの住所を32文字以内で入力してください")
 	private String address;
 
-	@Max(64)
+	@Size(max = 64, message = "ビル名・マンション名を64文字以内で入力してください")
 	private String otherAddress;
 
-	@Max(16)
+	@Size(max = 16, message = "連絡先電話番号を16桁以内で入力してください")
 	private String tel;
 
-	@Max(256)
-	@Pattern(regexp = "/^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$/")
+	@Size(max = 256, message = "メールアドレスを256文字以内で入力してください")
+	@Pattern(regexp = "/^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$/|^()$")
 	private String email;
 
-	public Integer getId() {
-		return id;
+	public String getContractKey() {
+		return contractKey;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setContractKey(String contractKey) {
+		this.contractKey = contractKey;
 	}
 
-	public String getKey() {
-		return key;
+	public LocalDate getContractDate() {
+		return contractDate;
 	}
 
-	public void setKey(String key) {
-		this.key = key;
+	public void setContractDate(LocalDate contractDate) {
+		this.contractDate = contractDate;
 	}
 
-	public LocalDate getDate() {
-		return date;
+	public String getContractName() {
+		return contractName;
 	}
 
-	public void setDate(LocalDate date) {
-		this.date = date;
+	public void setContractName(String contractName) {
+		this.contractName = contractName;
 	}
 
-	public String getName() {
-		return name;
+	public String getContractKana() {
+		return contractKana;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getKana() {
-		return kana;
-	}
-
-	public void setKana(String kana) {
-		this.kana = kana;
+	public void setContractKana(String contractKana) {
+		this.contractKana = contractKana;
 	}
 
 	public String getZip() {

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{common/layout::layout(~{::body/content()})}">
+	<head>
+		<meta charset="UTF-8">
+	</head>
+
+	<body>
+		<div id="main">
+			<div th:switch="*{type}">
+				<h1 th:case="insert">契約者新規登録</h1>
+				<h1 th:case="update">契約者更新</h1>
+				<h1 th:case="delete">契約者削除</h1>
+			</div>
+			<form th:action="@{/contract/}+${type}" method="POST" th:object="${contractDetailForm}">
+				<div th:if="${type} == 'insert'">
+					契約者ID：<input type="text" th:field="*{contractKey}" />
+					<span style="color:red;" th:errors="*{contractKey}"></span>
+				</div>
+				<div th:unless="${type} == 'insert'">
+					契約者ID：<input type="text" th:field="*{contractKey}" disabled />
+				</div>
+				<div th:unless="${type} == 'delete'">
+					契約日：<input type="date" th:field="*{contractDate}" />
+					<span th:if="${#fields.hasErrors('contractDate')}" th:errors="*{contractDate}"></span>
+				</div>
+				<div th:if="${type} == 'delete'">
+					契約日：<input type="date" th:field="*{contractDate}" disabled />
+				</div>
+				<div th:unless="${type} == 'delete'">
+					契約者名：<input type="text" th:field="*{contractName}" />
+					<span th:if="${#fields.hasErrors('contractName')}" th:errors="*{contractName}"></span>
+				</div>
+				<div th:if="${type} == 'delete'">
+					契約者名：<input type="text" th:field="*{contractName}" disabled />
+				</div>
+				<div th:unless="${type} == 'delete'">
+					契約者名ｶﾅ：<input type="text" th:field="*{contractKana}" />
+					<span th:if="${#fields.hasErrors('contractKana')}" th:errors="*{contractKana}"></span>
+				</div>
+				<div th:if="${type} == 'delete'">
+					契約者名ｶﾅ：<input type="text" th:field="*{contractKana}" disabled />
+				</div>
+				<div th:unless="${type} == 'delete'">
+					郵便番号：<input type="text" th:field="*{zip}" onBlur="search()" />
+					<span th:if="${#fields.hasErrors('zip')}" th:errors="*{zip}"></span>
+				</div>
+				<div th:if="${type} == 'delete'">
+					郵便番号：<input type="text" th:field="*{zip}" disabled />
+				</div>
+				<div th:unless="${type} == 'delete'">
+					都道府県：
+					<select th:field="*{pref}">
+						<option th:each="pref: ${prefs}" th:value="${pref.code}" th:text="${pref.name}" th:selected="${pref.code == selectedOption}"></option>
+					</select>
+					<span th:if="${#fields.hasErrors('pref')}" th:errors="*{pref}"></span>
+				</div>
+				<div th:if="${type} == 'delete'">
+					都道府県：
+					<select th:field="*{pref}" disabled>
+						<option th:each="pref: ${prefs}" th:value="${pref.code}" th:text="${pref.name}" th:selected="${pref.code == selectedOption}"></option>
+					</select>
+				</div>
+				<div th:unless="${type} == 'delete'">
+					市区町村：<input type="text" th:field="*{city}" />
+					<span th:if="${#fields.hasErrors('city')}" th:errors="*{city}"></span>
+				</div>
+				<div th:if="${type} == 'delete'">
+					市区町村：<input type="text" th:field="*{city}" disabled />
+				</div>
+				<div th:unless="${type} == 'delete'">
+					その他番地：<input type="text" th:field="*{address}" />
+					<span th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></span>
+				</div>
+				<div th:if="${type} == 'delete'">
+					その他番地：<input type="text" th:field="*{address}" disabled />
+				</div>
+				<div th:unless="${type} == 'delete'">
+					ビル・マンション名等：<input type="text" th:field="*{otherAddress}" />
+					<span th:if="${#fields.hasErrors('otherAddress')}" th:errors="*{otherAddress}"></span>
+				</div>
+				<div th:if="${type} == 'delete'">
+					ビル・マンション名等：<input type="text" th:field="*{otherAddress}" disabled />
+				</div>
+				<div th:unless="${type} == 'delete'">
+					連絡先：<input type="text" th:field="*{tel}" />
+					<span th:if="${#fields.hasErrors('tel')}" th:errors="*{tel}"></span>
+				</div>
+				<div th:if="${type} == 'delete'">
+					連絡先：<input type="text" th:field="*{tel}" disabled />
+				</div>
+				<div th:unless="${type} == 'delete'">
+					メールアドレス：<input type="email" th:field="*{email}" />
+					<span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span><br>
+				</div>
+				<div th:if="${type} == 'delete'">
+					メールアドレス：<input type="email" th:field="*{email}" disabled />
+				</div>
+				<button class="button1" type="submit" th:text="${label}"></button>
+				<button class="button1" type="button" onclick="window.location.href='/contract_list'">戻る</button>
+			</form>
+		</div>
+		<script>
+			const search_url = 'https://zipcloud.ibsnet.co.jp/api/search';
+			function search(){
+				let zip = $('#zip').val();
+				if (zip != null){
+					zip = zip.replace('-', '');
+					let address = '';
+					$.ajax(
+						{
+							url: search_url,
+							type: 'get',
+							dataType: 'json',
+							data: {
+								zipcode: zip
+							}
+						}
+					).done(
+						function(response){
+							var results = response.results;
+							if(results == null || results.length == 0){
+								$('#zip').css('color', 'red');
+								alert(response.message);
+							} else {
+								const element = results[0];
+								if ((element.prefcode).length == 1){
+									prefcd = '0' + element.prefcode;
+								} else {
+									prefcd = element.prefcode;
+								}
+								$('#zip').css('color', 'black');
+								$('#pref').val(prefcd);
+								$('#city').val(element.address2);
+								$('#address').val(element.address3);
+							}
+						}
+					)
+				}
+			}
+		</script>
+	</body>
+</html>

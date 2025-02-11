@@ -8,12 +8,10 @@
 		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	</head>
 	<body>
-		<div>
-			<div id="container">
-				<div id="sidebar" th:replace="~{common/sidebar::layout-sidebar}"></div>
-				<div id="main" th:replace="${body}"></div>
-			</div>
-			<div th:replace="~{common/footer::layout-footer}"></div>
+		<div id="container">
+			<div th:replace="~{common/sidebar::layout-sidebar}"></div>
+			<div id="main" th:replace="${body}"></div>
 		</div>
+		<div th:replace="~{common/footer::layout-footer}"></div>
 	</body>
 </html>

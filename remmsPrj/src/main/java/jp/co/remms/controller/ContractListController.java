@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -38,18 +39,18 @@ public class ContractListController {
 	EntityManager entityManager;
 
 	@GetMapping("/contract_list")
-	public String contractList(ContractSearchForm form, Model model) {
+	public String contractList(@ModelAttribute ContractSearchForm form, Model model) {
 		model.addAttribute("contracts", contractRepository.findByDeleteDateIsNullOrderByContractDateDesc());
 		return "contract_list";
 	}
 
 	@PostMapping("/contract_search")
-	public String contractSearch(ContractSearchForm form, Model model) {
-		DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-		LocalDate fromD = LocalDate.parse("1900/01/01", f);
-		LocalDate toD = LocalDate.parse("9999/12/31", f);
-		LocalDate fromL = LocalDate.parse("1900/01/01", f);
-		LocalDate toL = LocalDate.parse("9999/12/31", f);
+	public String contractSearch(@ModelAttribute ContractSearchForm form, Model model) {
+		DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		LocalDate fromD = LocalDate.parse("1900-01-01", f);
+		LocalDate toD = LocalDate.parse("9999-12-31", f);
+		LocalDate fromL = LocalDate.parse("1900-01-01", f);
+		LocalDate toL = LocalDate.parse("9999-12-31", f);
 		if(form.getFromDate() != null) {
 			fromD = form.getFromDate();
 		}
@@ -75,17 +76,20 @@ public class ContractListController {
 	}
 
 	@GetMapping("/contract_create")
-	public String contractCreate(ContractDetailForm form, Model model) {
+	public String contractCreate(@ModelAttribute ContractDetailForm form, Model model) {
 		model.addAttribute("prefs", prefRepository.findAll());
-		return "contract_create";
+		model.addAttribute("type", "insert");
+		model.addAttribute("label", "登録");
+		return "contract_detail";
 	}
 
 	@PostMapping("/contract/insert")
-	public String contractInsert(@Valid ContractDetailForm form, BindingResult result, Model model) {
+	public String contractInsert(@Valid @ModelAttribute ContractDetailForm form, @ModelAttribute ContractSearchForm form1, BindingResult result, Model model) {
 		if(result.hasErrors()) {
+			model.addAttribute("prefs", prefRepository.findAll());
 			return "contract_create";
 		}
-		Contract chk = contractRepository.findByContractKeyAndDeleteDateIsNull(form.getKey());
+		Contract chk = contractRepository.findByContractKeyAndDeleteDateIsNull(form.getContractKey());
 		if(chk != null) {
 			model.addAttribute("ErrMsg", "契約IDが既に登録されています。");
 			return "contract_detail";
@@ -93,11 +97,11 @@ public class ContractListController {
 			Contract contract = new Contract();
 			Timestamp now = new Timestamp(System.currentTimeMillis());
 			Integer userId = (Integer)this.session.getAttribute("userId");
-			LocalDate limitDay = form.getDate().plusYears(1).minusDays(1);
-			contract.setContractKey(form.getKey());
-			contract.setContractDate(form.getDate());
-			contract.setContractName(form.getName());
-			contract.setContractKana(form.getKana());
+			LocalDate limitDay = form.getContractDate().plusYears(1).minusDays(1);
+			contract.setContractKey(form.getContractKey());
+			contract.setContractDate(form.getContractDate());
+			contract.setContractName(form.getContractName());
+			contract.setContractKana(form.getContractKana());
 			contract.setZip(form.getZip());
 			contract.setPref(form.getPref());
 			contract.setCity(form.getCity());
@@ -116,33 +120,48 @@ public class ContractListController {
 		return "contract_list";
 	}
 
-	@GetMapping("/contract/detail/{key}")
-	public String contractDetail(@PathVariable("key") String key, ContractDetailForm form,  Model model) {
+	@GetMapping("/contract/change/{key}")
+	public String contractDetail(@PathVariable("key") String key, @ModelAttribute ContractDetailForm form,  Model model) {
 		model.addAttribute("prefs", prefRepository.findAll());
-		model.addAttribute("contract", contractRepository.findByContractKeyAndDeleteDateIsNull(key));
-		return "contract_update";
+		Contract contract = contractRepository.findByContractKeyAndDeleteDateIsNull(key);
+		DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		form.setContractKey(contract.getContractKey());
+		form.setContractDate(contract.getContractDate());
+		form.setContractName(contract.getContractName());
+		form.setContractKana(contract.getContractKana());
+		form.setZip(contract.getZip());
+		form.setPref(contract.getPref());
+		form.setCity(contract.getCity());
+		form.setAddress(contract.getAddress());
+		form.setOtherAddress(contract.getOtherAddress());
+		form.setTel(contract.getTel());
+		form.setEmail(contract.getEmail());
+		model.addAttribute("type", "update");
+		model.addAttribute("label", "更新");
+		return "contract_detail";
 	}
 
 	@PostMapping("/contract/update")
-	public String contractUpdate(@Valid ContractDetailForm form, BindingResult result, Model model) {
+	public String contractUpdate(@Valid @ModelAttribute ContractDetailForm form, @ModelAttribute ContractSearchForm form1, BindingResult result, Model model) {
 		if(result.hasErrors()) {
+			model.addAttribute("prefs", prefRepository.findAll());
 			return "contract_update";
 		}
-		Contract contract = contractRepository.findByContractKeyAndDeleteDateIsNull(form.getKey());
+		Contract contract = contractRepository.findByContractKeyAndDeleteDateIsNull(form.getContractKey());
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		Integer userId = (Integer)this.session.getAttribute("userId");
 		LocalDate limitDay = null;
-		if(contract.getContractDate() != form.getDate()) {
-			limitDay = form.getDate().plusYears(1).minusDays(1);
+		if(contract.getContractDate() != form.getContractDate()) {
+			limitDay = form.getContractDate().plusYears(1).minusDays(1);
 		} else {
 			limitDay = contract.getContractDate();
 		}
 
-		System.out.println("key:" + form.getKey() + " date:" + form.getDate());
-		contract.setContractKey(form.getKey());
-		contract.setContractDate(form.getDate());
-		contract.setContractName(form.getName());
-		contract.setContractKana(form.getKana());
+		System.out.println("key:" + form.getContractKey() + " date:" + form.getContractDate());
+		contract.setContractKey(form.getContractKey());
+		contract.setContractDate(form.getContractDate());
+		contract.setContractName(form.getContractName());
+		contract.setContractKana(form.getContractKana());
 		contract.setZip(form.getZip());
 		contract.setPref(form.getPref());
 		contract.setCity(form.getCity());
@@ -157,6 +176,27 @@ public class ContractListController {
 
 		model.addAttribute("contracts", contractRepository.findByDeleteDateIsNullOrderByContractDateDesc());
 		return "contract_list";
+	}
+
+	@GetMapping("/contract/destroy/{key}")
+	public String contractDestroy(@PathVariable("key") String key, @ModelAttribute ContractDetailForm form, Model model) {
+		model.addAttribute("prefs", prefRepository.findAll());
+		Contract contract = contractRepository.findByContractKeyAndDeleteDateIsNull(key);
+		DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		form.setContractKey(contract.getContractKey());
+		form.setContractDate(contract.getContractDate());
+		form.setContractName(contract.getContractName());
+		form.setContractKana(contract.getContractKana());
+		form.setZip(contract.getZip());
+		form.setPref(contract.getPref());
+		form.setCity(contract.getCity());
+		form.setAddress(contract.getAddress());
+		form.setOtherAddress(contract.getOtherAddress());
+		form.setTel(contract.getTel());
+		form.setEmail(contract.getEmail());
+		model.addAttribute("type", "delete");
+		model.addAttribute("label", "削除");
+		return "contract_detail";
 	}
 
 	@GetMapping("/contract/delete/{key}")

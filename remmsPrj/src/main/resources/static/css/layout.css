@@ -5,7 +5,7 @@ body{
 }
 
 div#container{
-	flex-grow: 1;
+
 }
 
 div#sidebar{
@@ -23,7 +23,6 @@ div#main{
 
 div#footer{
 	background-color: #7cfc00;
-	display: table;
 	clear: left;
 	width: 100%;
 }
