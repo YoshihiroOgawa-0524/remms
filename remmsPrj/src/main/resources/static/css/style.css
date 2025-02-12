@@ -41,18 +41,18 @@
 	vertical-align: middle;
 }
 
-table{
+.list{
 	border-collapse: collapse;
 	border: solid;
 	min-width: 85vh;
 	margin: 0 auto;
 }
 
-th{
+.title{
 	border: solid thin;
 	height: 2em;
 	padding: 0;
-	background-color: aqua;
+	background-color: lemonchiffon;
 	text-align: center;
 }
 

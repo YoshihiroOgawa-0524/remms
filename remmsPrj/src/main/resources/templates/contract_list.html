@@ -11,8 +11,8 @@
 					契約ID：<input type="text" th:field="*{searchKey}" />
 				</div>
 				<div>
-					契約日：<input type="date" th:field="*{fromDate}" />～<input type="date" th:field="*{toDate}" />
-					契約満了日：<input type="date" th:field="*{fromLimit}" />～<input type="date" th:field="*{toLimit}" />
+					契約日：<input type="text" th:field="*{fromDate}" />～<input type="text" th:field="*{toDate}" />
+					契約満了日：<input type="text" th:field="*{fromLimit}" />～<input type="text" th:field="*{toLimit}" />
 				</div>
 				<div>
 					契約名：<input type="text" th:field="*{searchName}" />
@@ -29,8 +29,8 @@
 				<button class="button1" type="button" id="delete" disabled="disabled">削除</button>
 			</div>
 			<div>
-				<table id="table">
-					<tr>
+				<table id="list">
+					<tr class="title">
 						<th style="width:5%;"><button class="button1" type="button" id="uncheck" disabled="disabled">クリア</button></th>
 						<th style="width:15%;">契約ID</th>
 						<th style="width:25%;">契約名</th>
@@ -52,6 +52,25 @@
 			</div>
 		</div>
 		<script>
+			$(function(){
+				$('#fromDate').datepicker({
+					changeYear: true,
+					changeMonth: true,
+				});
+				$('#toDate').datepicker({
+					changeYear: true,
+					changeMonth: true,
+				});
+				$('#fromLimit').datepicker({
+					changeYear: true,
+					changeMonth: true,
+				});
+				$('#toLimit').datepicker({
+					changeYear: true,
+					changeMonth: true,
+				});
+			});
+
 			$(document).ready(function(){
 				$('#clear').click(function(){
 					$('#searchKey').val("");

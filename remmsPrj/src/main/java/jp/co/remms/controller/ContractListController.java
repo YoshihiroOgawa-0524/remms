@@ -1,6 +1,7 @@
 package jp.co.remms.controller;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -53,6 +54,13 @@ public class ContractListController {
 		LocalDate toL = LocalDate.parse("9999-12-31", f);
 		if(form.getFromDate() != null) {
 			fromD = form.getFromDate();
+			System.out.println("FromD:" + fromD);
+			System.out.println("FromD:" + form.getFromDate());
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			int yyyy = form.getFromDate().getYear();
+			System.out.println("Year:" + yyyy);
+			form.setFromDate(LocalDate.parse("2025-02-01"));
+			System.out.println("FromD:" + form.getFromDate());
 		}
 		if(form.getToDate() != null) {
 			toD = form.getToDate();
