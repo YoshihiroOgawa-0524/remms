@@ -9,7 +9,6 @@ import jp.co.remms.entity.Contract;
 
 @Repository
 public interface ContractRepository extends JpaRepository<Contract, Integer> {
-	Contract findByContractKey(String contract_key);
 	
 	List<Contract> findByDeleteDateIsNullOrderByContractDateDesc();
 	

@@ -3,15 +3,17 @@ package jp.co.remms.form;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class ContractDetailForm implements Serializable {
 
+	private Integer id;
+
 	@NotBlank
-	@Pattern(regexp = "/^[a-zA-Z0-9]", message = "契約IDは半角英数で入力してください")
+//	@Pattern(regexp = "/^[a-zA-Z0-9]+$", message = "契約者IDは半角英数で入力してください")
 	private String contractKey;
 
 	@NotNull
@@ -23,7 +25,8 @@ public class ContractDetailForm implements Serializable {
 	@NotBlank
 	private String contractKana;
 
-	@Size(min = 7, max = 7, message = "郵便番号を半角数字7桁で入力してください")
+	@Size(min = 0, max = 7, message = "郵便番号は7桁で入力してください")
+//	@Pattern(regexp = "/^[0-9|\0]+$", message = "郵便番号は半角数字で入力してください")
 	private String zip;
 
 	private String pref;
@@ -37,12 +40,21 @@ public class ContractDetailForm implements Serializable {
 	@Size(max = 64, message = "ビル名・マンション名を64文字以内で入力してください")
 	private String otherAddress;
 
-	@Size(max = 16, message = "連絡先電話番号を16桁以内で入力してください")
+	@Size(max = 16, message = "連絡先電話番号を16文字以内で入力してください")
 	private String tel;
 
+	@NotBlank
 	@Size(max = 256, message = "メールアドレスを256文字以内で入力してください")
-	@Pattern(regexp = "/^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$/|^()$")
+	@Email(message = "正しいメールアドレスを入力してください")
 	private String email;
+
+	public Integer getId() {
+		return id;
+	}
+	
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
 	public String getContractKey() {
 		return contractKey;

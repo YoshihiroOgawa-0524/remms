@@ -8,12 +8,12 @@ import java.time.format.DateTimeFormatter;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -92,14 +92,16 @@ public class ContractListController {
 	}
 
 	@PostMapping("/contract/insert")
-	public String contractInsert(@Valid @ModelAttribute ContractDetailForm form, @ModelAttribute ContractSearchForm form1, BindingResult result, Model model) {
+	public String contractInsert(@Validated @ModelAttribute ContractDetailForm form, BindingResult result, @ModelAttribute ContractSearchForm form1, Model model) {
 		if(result.hasErrors()) {
 			model.addAttribute("prefs", prefRepository.findAll());
-			return "contract_create";
+			model.addAttribute("type", "insert");
+			model.addAttribute("label", "登録");
+			return "contract_detail";
 		}
 		Contract chk = contractRepository.findByContractKeyAndDeleteDateIsNull(form.getContractKey());
 		if(chk != null) {
-			model.addAttribute("ErrMsg", "契約IDが既に登録されています。");
+			model.addAttribute("prefs", prefRepository.findAll());
 			return "contract_detail";
 		} else {
 			Contract contract = new Contract();
@@ -150,10 +152,12 @@ public class ContractListController {
 	}
 
 	@PostMapping("/contract/update")
-	public String contractUpdate(@Valid @ModelAttribute ContractDetailForm form, @ModelAttribute ContractSearchForm form1, BindingResult result, Model model) {
+	public String contractUpdate(@Validated @ModelAttribute ContractDetailForm form, BindingResult result, @ModelAttribute ContractSearchForm form1, Model model) {
 		if(result.hasErrors()) {
 			model.addAttribute("prefs", prefRepository.findAll());
-			return "contract_update";
+			model.addAttribute("type", "update");
+			model.addAttribute("label", "更新");
+			return "contract_detail";
 		}
 		Contract contract = contractRepository.findByContractKeyAndDeleteDateIsNull(form.getContractKey());
 		Timestamp now = new Timestamp(System.currentTimeMillis());
@@ -190,7 +194,7 @@ public class ContractListController {
 	public String contractDestroy(@PathVariable("key") String key, @ModelAttribute ContractDetailForm form, Model model) {
 		model.addAttribute("prefs", prefRepository.findAll());
 		Contract contract = contractRepository.findByContractKeyAndDeleteDateIsNull(key);
-		DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//		DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		form.setContractKey(contract.getContractKey());
 		form.setContractDate(contract.getContractDate());
 		form.setContractName(contract.getContractName());
@@ -204,11 +208,14 @@ public class ContractListController {
 		form.setEmail(contract.getEmail());
 		model.addAttribute("type", "delete");
 		model.addAttribute("label", "削除");
+		model.addAttribute("contractKey", contract.getContractKey());
 		return "contract_detail";
 	}
 
-	@GetMapping("/contract/delete/{key}")
-	public String contractDelete(@PathVariable("key") String key, Model model) {
+	@PostMapping("/contract/delete")
+	public String contractDelete(@ModelAttribute ContractDetailForm form, @ModelAttribute ContractSearchForm form1, Model model) {
+		String key = form.getContractKey();
+		System.out.println("key:" + key);
 		Contract contract = contractRepository.findByContractKeyAndDeleteDateIsNull(key);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		Integer userId = (Integer)this.session.getAttribute("userId");

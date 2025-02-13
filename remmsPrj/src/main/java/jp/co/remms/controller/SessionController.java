@@ -45,7 +45,7 @@ public class SessionController {
 		this.session.setAttribute("contractKey", null);
 		this.session.setAttribute("contractId", null);
 		// 指定されたKeyにて契約情報を取得
-		Contract contract = contractRepository.findByContractKey(contractKey);
+		Contract contract = contractRepository.findByContractKeyAndDeleteDateIsNull(contractKey);
 		// 契約情報が取得できた場合、sessionに情報を維持
 		if(contract != null) {
 			this.session.setAttribute("contractName", contract.getContractName());
@@ -99,7 +99,7 @@ public class SessionController {
 		}
 		// ユーザが存在しない場合、ログイン画面を再表示
 		String contractKey = (String)session.getAttribute("contractKey");
-		Contract contract = contractRepository.findByContractKey(contractKey);
+		Contract contract = contractRepository.findByContractKeyAndDeleteDateIsNull(contractKey);
 		model.addAttribute("contractName", contract.getContractName());
 		return "session/login";
 	}

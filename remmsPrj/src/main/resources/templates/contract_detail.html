@@ -12,37 +12,36 @@
 				<h1 th:case="delete">契約者削除</h1>
 			</div>
 			<form th:action="@{/contract/}+${type}" method="POST" th:object="${contractDetailForm}">
+				<ul th:if="${#fields.hasErrors('*')}">
+					<li style="color:red;" th:each="err : ${#fields.errors('*')}" th:text="${err}">
+				</ul>
 				<div th:if="${type} == 'insert'">
 					契約者ID：<input type="text" th:field="*{contractKey}" />
-					<span style="color:red;" th:errors="*{contractKey}"></span>
 				</div>
 				<div th:unless="${type} == 'insert'">
-					契約者ID：<input type="text" th:field="*{contractKey}" disabled />
+					契約者ID：<span th:text="*{contractKey}"></span>
+					<input type="hidden" th:field="*{contractKey}" />
 				</div>
 				<div th:unless="${type} == 'delete'">
-					契約日：<input type="date" th:field="*{contractDate}" />
-					<span th:if="${#fields.hasErrors('contractDate')}" th:errors="*{contractDate}"></span>
+					契約日：<input type="text" th:field="*{contractDate}" />
 				</div>
 				<div th:if="${type} == 'delete'">
-					契約日：<input type="date" th:field="*{contractDate}" disabled />
+					契約日：<input type="text" th:field="*{contractDate}" disabled />
 				</div>
 				<div th:unless="${type} == 'delete'">
 					契約者名：<input type="text" th:field="*{contractName}" />
-					<span th:if="${#fields.hasErrors('contractName')}" th:errors="*{contractName}"></span>
 				</div>
 				<div th:if="${type} == 'delete'">
 					契約者名：<input type="text" th:field="*{contractName}" disabled />
 				</div>
 				<div th:unless="${type} == 'delete'">
 					契約者名ｶﾅ：<input type="text" th:field="*{contractKana}" />
-					<span th:if="${#fields.hasErrors('contractKana')}" th:errors="*{contractKana}"></span>
 				</div>
 				<div th:if="${type} == 'delete'">
 					契約者名ｶﾅ：<input type="text" th:field="*{contractKana}" disabled />
 				</div>
 				<div th:unless="${type} == 'delete'">
 					郵便番号：<input type="text" th:field="*{zip}" onBlur="search()" />
-					<span th:if="${#fields.hasErrors('zip')}" th:errors="*{zip}"></span>
 				</div>
 				<div th:if="${type} == 'delete'">
 					郵便番号：<input type="text" th:field="*{zip}" disabled />
@@ -52,7 +51,6 @@
 					<select th:field="*{pref}">
 						<option th:each="pref: ${prefs}" th:value="${pref.code}" th:text="${pref.name}" th:selected="${pref.code == selectedOption}"></option>
 					</select>
-					<span th:if="${#fields.hasErrors('pref')}" th:errors="*{pref}"></span>
 				</div>
 				<div th:if="${type} == 'delete'">
 					都道府県：
@@ -62,35 +60,30 @@
 				</div>
 				<div th:unless="${type} == 'delete'">
 					市区町村：<input type="text" th:field="*{city}" />
-					<span th:if="${#fields.hasErrors('city')}" th:errors="*{city}"></span>
 				</div>
 				<div th:if="${type} == 'delete'">
 					市区町村：<input type="text" th:field="*{city}" disabled />
 				</div>
 				<div th:unless="${type} == 'delete'">
 					その他番地：<input type="text" th:field="*{address}" />
-					<span th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></span>
 				</div>
 				<div th:if="${type} == 'delete'">
 					その他番地：<input type="text" th:field="*{address}" disabled />
 				</div>
 				<div th:unless="${type} == 'delete'">
 					ビル・マンション名等：<input type="text" th:field="*{otherAddress}" />
-					<span th:if="${#fields.hasErrors('otherAddress')}" th:errors="*{otherAddress}"></span>
 				</div>
 				<div th:if="${type} == 'delete'">
 					ビル・マンション名等：<input type="text" th:field="*{otherAddress}" disabled />
 				</div>
 				<div th:unless="${type} == 'delete'">
 					連絡先：<input type="text" th:field="*{tel}" />
-					<span th:if="${#fields.hasErrors('tel')}" th:errors="*{tel}"></span>
 				</div>
 				<div th:if="${type} == 'delete'">
 					連絡先：<input type="text" th:field="*{tel}" disabled />
 				</div>
 				<div th:unless="${type} == 'delete'">
 					メールアドレス：<input type="email" th:field="*{email}" />
-					<span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span><br>
 				</div>
 				<div th:if="${type} == 'delete'">
 					メールアドレス：<input type="email" th:field="*{email}" disabled />
@@ -100,6 +93,13 @@
 			</form>
 		</div>
 		<script>
+			$(function(){
+				$('#contractDate').datepicker({
+					changeYear: true,
+					changeMonth: true,
+				});
+			});
+
 			const search_url = 'https://zipcloud.ibsnet.co.jp/api/search';
 			function search(){
 				let zip = $('#zip').val();

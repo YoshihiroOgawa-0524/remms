@@ -1,9 +1,6 @@
 <meta charset="UTF-8" />
 <div id="sidebar" th:fragment="layout-sidebar">
 	<div class="center">
-		<div th:if="${session.contractKey == 'admin'}">
-			<button class="button1" type="button" onclick="location.href='/contract_list'">契約者管理</button>
-		</div>
 		<div th:unless="${session.contractKey == 'admin'}">
 			<button class="button1" type="button" onclick="location.href='/user_list'">ユーザ管理</button>
 			<button class="button1" type="button" onclick="location.href='/customer_list'">&nbsp顧客管理&nbsp</button>

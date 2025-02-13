@@ -9,7 +9,7 @@ div#container{
 }
 
 div#sidebar{
-	background-color: #7cfc00;
+	background-color: #98FB98;
 	float: left;
 	width: 150px;
 	min-height: 94vh;
@@ -22,7 +22,7 @@ div#main{
 }
 
 div#footer{
-	background-color: #7cfc00;
+	background-color: #98FB98;
 	clear: left;
 	width: 100%;
 }
