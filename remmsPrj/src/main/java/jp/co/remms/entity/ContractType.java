@@ -13,39 +13,39 @@ import jakarta.persistence.Table;
 
 public class ContractType {
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_contracts_gen")
-	@SequenceGenerator(name = "seq_contracts_gen", sequenceName = "seq_contracts", allocationSize = 1)
-	private Integer id;
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_contract_types_gen")
+	@SequenceGenerator(name = "seq_contract_types_gen", sequenceName = "seq_contract_types", allocationSize = 1)
+	private Long id;
 
-	@Column
+	@Column(name = "type_name")
 	private String typeName;
 	
-	@Column
+	@Column(name = "memo")
 	private String memo;
 	
-	@Column
+	@Column(name = "create_date")
 	private String createDate;
 	
-	@Column
+	@Column(name = "update_date")
 	private String updateDate;
 	
-	@Column
+	@Column(name = "delete_date")
 	private String deleteDate;
 	
-	@Column
+	@Column(name = "create_user")
 	private Integer createUser;
 	
-	@Column
+	@Column(name = "update_user")
 	private Integer updateUser;
 	
-	@Column
+	@Column(name = "delete_user")
 	private Integer deleteUser;
 	
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 	
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

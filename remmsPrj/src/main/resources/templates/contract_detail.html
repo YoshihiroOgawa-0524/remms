@@ -15,12 +15,27 @@
 				<ul th:if="${#fields.hasErrors('*')}">
 					<li style="color:red;" th:each="err : ${#fields.errors('*')}" th:text="${err}">
 				</ul>
+				<div th:unless="${type} == 'insert'">
+					<input type="hidden" th:field="*{id}" />
+				</div>
 				<div th:if="${type} == 'insert'">
 					契約者ID：<input type="text" th:field="*{contractKey}" />
 				</div>
 				<div th:unless="${type} == 'insert'">
 					契約者ID：<span th:text="*{contractKey}"></span>
 					<input type="hidden" th:field="*{contractKey}" />
+				</div>
+				<div th:unless="${type} == 'delete'">
+					契約タイプ：
+					<span th:each="contractType: ${contractTypes}">
+						<input type="checkbox" th:value="${contractType.id}" th:text="${contractType.typeName}" th:field="*{contractType}" />
+					</span>
+				</div>
+				<div th:if="${type} == 'delete'">
+					契約タイプ：
+					<span th:each="contractType: ${contractTypes}">
+						<input type="checkbox" th:value="${contractType.id}" th:text="${contractType.typeName}" th:field="*{contractType}" readonly />
+					</span>
 				</div>
 				<div th:unless="${type} == 'delete'">
 					契約日：<input type="text" th:field="*{contractDate}" />

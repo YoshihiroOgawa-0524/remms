@@ -13,7 +13,6 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "contract_links")
 
-
 public class ContractLink {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_contract_links_gen")
@@ -21,10 +20,10 @@ public class ContractLink {
 	private Integer id;
 	
 	@Column(name = "contract_id")
-	private Integer contractId;	
+	private Long contractId;	
 	
 	@Column(name = "contract_type_id")
-	private Integer contractTypeId;
+	private Long contractTypeId;
 
 	@ManyToOne
 	@JoinColumn(name = "contract_id", referencedColumnName = "id", insertable = false, updatable = false)
@@ -42,19 +41,19 @@ public class ContractLink {
 		this.id = id;
 	}
 	
-	public Integer getContractId() {
+	public Long getContractId() {
 		return contractId;
 	}
 	
-	public void setContractId(Integer contract_id) {
+	public void setContractId(Long contract_id) {
 		this.contractId = contract_id;
 	}
 	
-	public Integer getContractTypeId() {
+	public Long getContractTypeId() {
 		return contractTypeId;
 	}
 	
-	public void setContractTypeId(Integer contract_type_id) {
+	public void setContractTypeId(Long contract_type_id) {
 		this.contractTypeId = contract_type_id;
 	}
 	

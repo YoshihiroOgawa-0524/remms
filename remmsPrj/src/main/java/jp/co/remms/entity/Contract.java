@@ -24,15 +24,24 @@ public class Contract {
 	
 	@Column(name = "contract_key")
 	private String contractKey;
-	
+
+	@Column(name = "contract_link_id")
+	private Long contractLinkId;
+
 	@Column(name = "contract_name")
 	private String contractName;
 	
 	@Column(name = "contract_kana")
 	private String contractKana;
 	
+	@Column(name = "contract_start_date")
+	private LocalDate contractStartDate;
+	
 	@Column(name = "contract_date")
 	private LocalDate contractDate;
+
+	@Column(name = "contract_limit")
+	private LocalDate contractLimit;
 	
 	@Column(name = "zip")
 	private String zip;
@@ -54,9 +63,6 @@ public class Contract {
 
 	@Column(name = "email")
 	private String email;
-
-	@Column(name = "contract_limit")
-	private LocalDate contractLimit;
 
 	@Column(name = "create_date")
 	private Timestamp createDate;
@@ -92,6 +98,14 @@ public class Contract {
 		this.contractKey = contract_key;
 	}
 	
+	public Long getContractLinkId() {
+		return contractLinkId;
+	}
+	
+	public void setContractLinkId(Long contract_link_id) {
+		this.contractLinkId = contract_link_id;
+	}
+	
 	public String getContractName() {
 		return contractName;
 	}
@@ -108,12 +122,28 @@ public class Contract {
 		this.contractKana = contract_kana;
 	}
 
+	public LocalDate getContractStartDate() {
+		return contractStartDate;
+	}
+	
+	public void setContractStartDate(LocalDate contract_start_date) {
+		this.contractStartDate = contract_start_date;
+	}
+
 	public LocalDate getContractDate() {
 		return contractDate;
 	}
 	
 	public void setContractDate(LocalDate contract_date) {
 		this.contractDate = contract_date;
+	}
+
+	public LocalDate getContractLimit() {
+		return contractLimit;
+	}
+	
+	public void setContractLimit(LocalDate contract_limit) {
+		this.contractLimit = contract_limit;
 	}
 
 	public String getZip() {
@@ -170,14 +200,6 @@ public class Contract {
 	
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public LocalDate getContractLimit() {
-		return contractLimit;
-	}
-	
-	public void setContractLimit(LocalDate contract_limit) {
-		this.contractLimit = contract_limit;
 	}
 
 	public Timestamp getCreateDate() {

@@ -10,11 +10,14 @@ import jakarta.validation.constraints.Size;
 
 public class ContractDetailForm implements Serializable {
 
-	private Integer id;
+	private Long id;
 
 	@NotBlank
 //	@Pattern(regexp = "/^[a-zA-Z0-9]+$", message = "契約者IDは半角英数で入力してください")
 	private String contractKey;
+	
+//	@NotBlank
+	private Long[] contractType;
 
 	@NotNull
 	private LocalDate contractDate;
@@ -48,11 +51,11 @@ public class ContractDetailForm implements Serializable {
 	@Email(message = "正しいメールアドレスを入力してください")
 	private String email;
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 	
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -62,6 +65,14 @@ public class ContractDetailForm implements Serializable {
 
 	public void setContractKey(String contractKey) {
 		this.contractKey = contractKey;
+	}
+
+	public Long[] getContractType() {
+		return contractType;
+	}
+	
+	public void setContractType(Long[] contractType) {
+		this.contractType = contractType;
 	}
 
 	public LocalDate getContractDate() {

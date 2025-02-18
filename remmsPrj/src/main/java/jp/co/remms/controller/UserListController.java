@@ -26,7 +26,7 @@ public class UserListController {
 	@GetMapping("/user_list")
 	public String userList(Model model) {
 		String contractKey = (String)this.session.getAttribute("contractKey");
-		model.addAttribute("contract", contractRepository.findByContractKey(contractKey));
+		model.addAttribute("contract", contractRepository.findByContractKeyAndDeleteDateIsNull(contractKey));
 		System.out.println("ContractKey:" + contractKey);
 		model.addAttribute("users", userRepository.findByContractKey(contractKey));
 		return "user_list";
