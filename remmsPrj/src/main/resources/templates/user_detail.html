@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{common/layout::layout(~{::body/content()})}">
+	<head>
+		<meta charset="UTF-8">
+	</head>
+
+	<body>
+		<div id="main">
+			<div th:switch="*{type}">
+				<h1 th:case="insert">ユーザ新規登録</h1>
+				<h1 th:case="update">ユーザ更新</h1>
+				<h1 th:case="delete">ユーザ削除</h1>
+			</div>
+			<form th:action="@{/user/}+${type}" method="POST" th:object="${userDetailForm}">
+				<ul th:if="${#fields.hasErrors('*')}">
+					<li style="color:red;" th:each="err : ${#fields.errors('*')}" th:text="${err}">
+				</ul>
+				<input type="hidden" th:field="*{contractKey}" />
+				<div th:unless="${type} == 'insert'">
+					<input type="hidden" th:field="*{id}" />
+				</div>
+				<div th:unless="${type} == 'delete'">
+					ユーザID：<input type="text" th:field="*{userId}" />
+				</div>
+				<div th:if="${type} == 'delete'">
+					ユーザID：<input type="text" th:field="*{userId}" disabled />
+				</div>
+				<div th:unless="${type} == 'delete'">
+					ユーザ名：<input type="text" th:field="*{userName}" />
+				</div>
+				<div th:if="${type} == 'delete'">
+					ユーザ名：<input type="text" th:field="*{userName}" disabled />
+				</div>
+				<div th:unless="${type} == 'delete'">
+					ユーザ名ｶﾅ：<input type="text" th:field="*{userKana}" />
+				</div>
+				<div th:if="${type} == 'delete'">
+					ユーザ名ｶﾅ：<input type="text" th:field="*{userKana}" disabled />
+				</div>
+				<button class="button1" type="submit" th:text="${label}"></button>
+				<button class="button1" type="button" onclick="window.location.href='/user_list'">戻る</button>
+			</form>
+		</div>
+	</body>
+</html>

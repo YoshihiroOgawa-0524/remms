@@ -22,17 +22,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import jp.co.remms.entity.Contract;
 import jp.co.remms.entity.ContractLink;
+import jp.co.remms.entity.User;
 import jp.co.remms.form.ContractDetailForm;
 import jp.co.remms.form.ContractSearchForm;
+import jp.co.remms.form.UserDetailForm;
 import jp.co.remms.repository.ContractLinkRepository;
 import jp.co.remms.repository.ContractRepository;
 import jp.co.remms.repository.ContractTypeRepository;
 import jp.co.remms.repository.PrefRepository;
+import jp.co.remms.repository.UserRepository;
 
 @Controller
-public class ContractListController {
+public class ContractController {
 	private HttpSession session;
-	public ContractListController(HttpSession session) {
+	public ContractController(HttpSession session) {
 		this.session = session;
 	}
 
@@ -45,16 +48,24 @@ public class ContractListController {
 	@Autowired
 	ContractLinkRepository contractLinkRepository;
 	@Autowired
+	UserRepository userRepository;
+	@Autowired
 	EntityManager entityManager;
 
 	@GetMapping("/contract_list")
 	public String contractList(@ModelAttribute ContractSearchForm form, Model model) {
+		if(this.session.getAttribute("contractKey") == null) {
+			return "login/";
+		}
 		model.addAttribute("contracts", contractRepository.findByDeleteDateIsNullOrderByContractDateDesc());
 		return "contract_list";
 	}
 
 	@PostMapping("/contract_search")
 	public String contractSearch(@ModelAttribute ContractSearchForm form, Model model) {
+		if(this.session.getAttribute("contractKey") == null) {
+			return "login/";
+		}
 		// 検索用日付の
 		DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		LocalDate fromD = LocalDate.parse("1900-01-01", f);
@@ -91,6 +102,9 @@ public class ContractListController {
 
 	@GetMapping("/contract_create")
 	public String contractCreate(@ModelAttribute ContractDetailForm form, Model model) {
+		if(this.session.getAttribute("contractKey") == null) {
+			return "login/";
+		}
 		// 新規登録画面の設定
 		model.addAttribute("prefs", prefRepository.findAll());
 		model.addAttribute("contractTypes", contractTypeRepository.findByDeleteDateIsNullOrderById());
@@ -100,7 +114,10 @@ public class ContractListController {
 	}
 
 	@PostMapping("/contract/insert")
-	public String contractInsert(@Validated @ModelAttribute ContractDetailForm form, BindingResult result, @ModelAttribute ContractSearchForm form1, Model model) {
+	public String contractInsert(@Validated @ModelAttribute ContractDetailForm form, BindingResult result, @ModelAttribute ContractSearchForm form1, @ModelAttribute UserDetailForm form2, Model model) {
+		if(this.session.getAttribute("contractKey") == null) {
+			return "login/";
+		}
 		// 契約画面のヴァリデーションチェック
 		if(result.hasErrors()) {
 			model.addAttribute("prefs", prefRepository.findAll());
@@ -153,13 +170,19 @@ public class ContractListController {
 			contractLink.setContractTypeId(s);
 			contractLinkRepository.save(contractLink);
 		});
-		// 契約一覧表示
-		model.addAttribute("contracts", contractRepository.findByDeleteDateIsNullOrderByContractDateDesc());
-		return "contract_list";
+		// ユーザ登録画面表示
+		model.addAttribute("type", "insert");
+		model.addAttribute("label", "登録");
+		System.out.println(form.getContractKey());
+		form2.setContractKey(form.getContractKey());
+		return "user_detail";
 	}
 
 	@GetMapping("/contract/change/{key}")
 	public String contractDetail(@PathVariable("key") String key, @ModelAttribute ContractDetailForm form,  Model model) {
+		if(this.session.getAttribute("contractKey") == null) {
+			return "login/";
+		}
 		// 契約修正画面の設定
 		Contract contract = contractRepository.findByContractKeyAndDeleteDateIsNull(key);
 		form.setId(contract.getId());
@@ -191,12 +214,22 @@ public class ContractListController {
 
 	@PostMapping("/contract/update")
 	public String contractUpdate(@Validated @ModelAttribute ContractDetailForm form, BindingResult result, @ModelAttribute ContractSearchForm form1, Model model) {
+		if(this.session.getAttribute("contractKey") == null) {
+			return "login/";
+		}
 		// 契約画面のヴァリデーションチェック
 		if(result.hasErrors()) {
 			model.addAttribute("prefs", prefRepository.findAll());
 			model.addAttribute("contractTypes", contractTypeRepository.findByDeleteDateIsNullOrderById());
 			model.addAttribute("type", "update");
 			model.addAttribute("label", "更新");
+			return "contract_detail";
+		}
+		// 契約タイプのチェック
+		Long[] type = form.getContractType();
+		if(type.length == 0) {
+			model.addAttribute("prefs", prefRepository.findAll());
+			model.addAttribute("errs", "契約タイプを選択してください。");
 			return "contract_detail";
 		}
 		// 更新対象データの取得
@@ -209,7 +242,6 @@ public class ContractListController {
 		} else {
 			limitDay = contract.getContractDate();
 		}
-		Long[] type = form.getContractType();
 		
 		contract.setContractKey(form.getContractKey());
 		contract.setContractDate(form.getContractDate());
@@ -245,8 +277,12 @@ public class ContractListController {
 
 	@GetMapping("/contract/destroy/{key}")
 	public String contractDestroy(@PathVariable("key") String key, @ModelAttribute ContractDetailForm form, Model model) {
+		if(this.session.getAttribute("contractKey") == null) {
+			return "login/";
+		}
 		// 契約削除画面の設定
 		Contract contract = contractRepository.findByContractKeyAndDeleteDateIsNull(key);
+		form.setId(contract.getId());
 		form.setContractKey(contract.getContractKey());
 		Long[] contractType = new Long[10];
 		int i = 0;
@@ -276,19 +312,29 @@ public class ContractListController {
 
 	@PostMapping("/contract/delete")
 	public String contractDelete(@ModelAttribute ContractDetailForm form, @ModelAttribute ContractSearchForm form1, Model model) {
+		if(this.session.getAttribute("contractKey") == null) {
+			return "login/";
+		}
 		String key = form.getContractKey();
+		// 登録ユーザ削除
+		List<User> users = userRepository.findByContractKey(key);
+		for(User user: users) {
+			userRepository.deleteById(user.getId());
+		}
 		Contract contract = contractRepository.findByContractKeyAndDeleteDateIsNull(key);
-		// 更新契約リンク登録
-		Long[] type = form.getContractType();
-		Arrays.stream(type).forEach(s -> {
-			ContractLink contractLink = new ContractLink();
-			contractLink.setContractId(form.getId());
-			contractLink.setContractTypeId(s);
-			contractLinkRepository.save(contractLink);
-		});
+		// 契約リンク削除
+		System.out.println("ID1=" + form.getId());
+		List<ContractLink> contractLinks = contractLinkRepository.findByContractId(form.getId());
+		System.out.println("Loop Start");
+		for(ContractLink contractLinkd: contractLinks) {
+			System.out.println("ID2=" + contractLinkd.getId());
+			contractLinkRepository.deleteById(contractLinkd.getId());
+		};
+		System.out.println("Loop Stop");
+
+		// 契約管理の削除
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		Integer userId = (Integer)this.session.getAttribute("userId");
-
 		contract.setDeleteDate(now);
 		contract.setDeleteUser(userId);
 		contractRepository.save(contract);

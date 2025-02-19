@@ -6,12 +6,11 @@ CREATE TABLE IF NOT EXISTS public.contracts
 (
     id bigint NOT NULL DEFAULT nextval('contract_id_seq'::regclass),
     contract_key character varying(255) COLLATE pg_catalog."default" NOT NULL,
-    contract_link_id bigint COLLATE pg_catalog."defualt" NOT NULL,
-    contract_name character varying(255) COLLATE pg_catalog."default" NOT NULL,
-    contract_kana character varying(255) COLLATE pg_catalog."default" NOT NULL,
     contract_start_date date,
     contract_date date,
     contract_limit date,
+    contract_name character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    contract_kana character varying(255) COLLATE pg_catalog."default" NOT NULL,
     zip character varying(255) COLLATE pg_catalog."default",
     pref character varying(255) COLLATE pg_catalog."default",
     city character varying(255) COLLATE pg_catalog."default",
@@ -19,12 +18,12 @@ CREATE TABLE IF NOT EXISTS public.contracts
     other_address character varying(255) COLLATE pg_catalog."default",
     tel character varying(255) COLLATE pg_catalog."default",
     email character varying(255) COLLATE pg_catalog."default",
-    create_user bigint,
-    update_user bigint,
-    delete_user bigint,
     create_date timestamp with time zone,
     update_date timestamp with time zone,
     delete_date timestamp with time zone,
+    create_user bigint,
+    update_user bigint,
+    delete_user bigint,
     CONSTRAINT contract_pkey PRIMARY KEY (id)
 )
 
@@ -39,12 +38,6 @@ COMMENT ON COLUMN public.contracts.id
 COMMENT ON COLUMN public.contracts.contract_key
     IS '契約KEY';
 
-COMMENT ON COLUMN public.contracts.contract_name
-    IS '契約者名称';
-
-COMMENT ON COLUMN public.contracts.contract_kana
-    IS '契約者名称カナ';
-
 COMMENT ON COLUMN public.contracts.contract_start_date
     IS '初回契約日';
 
@@ -53,6 +46,12 @@ COMMENT ON COLUMN public.contracts.contract_date
 
 COMMENT ON COLUMN public.contracts.contract_limit
     IS '契約終了日';
+
+COMMENT ON COLUMN public.contracts.contract_name
+    IS '契約者名称';
+
+COMMENT ON COLUMN public.contracts.contract_kana
+    IS '契約者名称カナ';
 
 COMMENT ON COLUMN public.contracts.zip
     IS '郵便番号';
@@ -75,15 +74,6 @@ COMMENT ON COLUMN public.contracts.tel
 COMMENT ON COLUMN public.contracts.email
     IS '連絡先メールアドレス';
 
-COMMENT ON COLUMN public.contracts.create_user
-    IS '登録ユーザID';
-
-COMMENT ON COLUMN public.contracts.update_user
-    IS '更新ユーザID';
-
-COMMENT ON COLUMN public.contracts.delete_user
-    IS '削除ユーザID';
-
 COMMENT ON COLUMN public.contracts.create_date
     IS '登録年月日';
 
@@ -92,3 +82,12 @@ COMMENT ON COLUMN public.contracts.update_date
 
 COMMENT ON COLUMN public.contracts.delete_date
     IS '削除年月日';
+
+COMMENT ON COLUMN public.contracts.create_user
+    IS '登録ユーザID';
+
+COMMENT ON COLUMN public.contracts.update_user
+    IS '更新ユーザID';
+
+COMMENT ON COLUMN public.contracts.delete_user
+    IS '削除ユーザID';

@@ -25,9 +25,6 @@ public class Contract {
 	@Column(name = "contract_key")
 	private String contractKey;
 
-	@Column(name = "contract_link_id")
-	private Long contractLinkId;
-
 	@Column(name = "contract_name")
 	private String contractName;
 	
@@ -96,14 +93,6 @@ public class Contract {
 
 	public void setContractKey(String contract_key) {
 		this.contractKey = contract_key;
-	}
-	
-	public Long getContractLinkId() {
-		return contractLinkId;
-	}
-	
-	public void setContractLinkId(Long contract_link_id) {
-		this.contractLinkId = contract_link_id;
 	}
 	
 	public String getContractName() {

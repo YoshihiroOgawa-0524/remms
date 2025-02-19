@@ -1,5 +1,7 @@
 package jp.co.remms.entity;
 
+import java.sql.Timestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,40 +21,43 @@ public class User {
 	@SequenceGenerator(name = "seq_users_gen", sequenceName = "seq_users", allocationSize = 1)
 	private Integer id;
 
-	@Column
+	@Column(name = "user_id")
 	private String userId;
 
-	@Column
+	@Column(name = "contract_key")
 	private String contractKey;
 
-	@Column
+	@Column(name = "contract_id")
+	private Long contractId;
+
+	@Column(name = "name")
 	private String name;
 
-	@Column
+	@Column(name = "name_kana")
 	private String nameKana;
 
-	@Column
+	@Column(name = "password")
 	private String password;
 
-	@Column
+	@Column(name = "type")
 	private Integer type;
 
-	@Column
-	private String createDate;
+	@Column(name = "create_date")
+	private Timestamp createDate;
 
-	@Column
-	private String updateDate;
+	@Column(name = "update_date")
+	private Timestamp updateDate;
 
-	@Column
-	private String deleteDate;
+	@Column(name = "delete_date")
+	private Timestamp deleteDate;
 
-	@Column
+	@Column(name = "create_user")
 	private Integer createUser;
 
-	@Column
+	@Column(name = "update_user")
 	private Integer updateUser;
 
-	@Column
+	@Column(name = "delete_user")
 	private Integer deleteUser;
 	
 	@ManyToOne
@@ -81,6 +86,14 @@ public class User {
 
 	public void setContractKey(String contract_key) {
 		this.contractKey = contract_key;
+	}
+
+	public Long getContractId() {
+		return contractId;
+	}
+	
+	public void setContractId(Long contract_id) {
+		this.contractId = contract_id;
 	}
 
 	public String getName() {
@@ -115,27 +128,27 @@ public class User {
 		this.type = type;
 	}
 
-	public String getCreateDate() {
+	public Timestamp getCreateDate() {
 		return createDate;
 	}
 
-	public void setCreateDate(String create_date) {
+	public void setCreateDate(Timestamp create_date) {
 		this.createDate = create_date;
 	}
 
-	public String getUpdateDate() {
+	public Timestamp getUpdateDate() {
 		return updateDate;
 	}
 
-	public void setUpdateDate(String update_date) {
+	public void setUpdateDate(Timestamp update_date) {
 		this.updateDate = update_date;
 	}
 
-	public String getDeleteDate() {
+	public Timestamp getDeleteDate() {
 		return deleteDate;
 	}
 
-	public void setDeleteDate(String delete_date) {
+	public void setDeleteDate(Timestamp delete_date) {
 		this.deleteDate = delete_date;
 	}
 
