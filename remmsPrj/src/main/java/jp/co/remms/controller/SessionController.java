@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import jp.co.remms.entity.Contract;
 import jp.co.remms.entity.User;
 import jp.co.remms.form.ContractSearchForm;
+import jp.co.remms.form.CustomerSearchForm;
 import jp.co.remms.form.LoginForm;
 import jp.co.remms.repository.ContractRepository;
 import jp.co.remms.repository.CustomerRepository;
@@ -63,7 +64,7 @@ public class SessionController {
 	}
 
 	@PostMapping("/doLogin")
-	public String doLoginGet(@Valid LoginForm form, ContractSearchForm form1, BindingResult result, Model model) {
+	public String doLoginGet(@Valid LoginForm form, BindingResult result, ContractSearchForm form1, CustomerSearchForm form2, Model model) {
 		if(result.hasErrors()) {
 			return "session/login";
 		}
@@ -89,7 +90,7 @@ public class SessionController {
 							return "contract_list";
 						// 契約者は一般の契約者
 						} else {
-							Integer ContractId = (Integer)this.session.getAttribute("contractId");
+							Long ContractId = (Long)this.session.getAttribute("contractId");
 							model.addAttribute("customers", customerRepository.findByContractIdAndDeleteDateIsNullOrderByCustomerKana(ContractId));
 							return "customer_list";
 						}

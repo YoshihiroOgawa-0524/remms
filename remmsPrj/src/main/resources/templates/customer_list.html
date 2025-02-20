@@ -6,22 +6,83 @@
 	<body>
 		<div class="center">
 			<h1>顧客一覧</h1>
-			<table>
-				<tr>
-					<th>顧客名</th>
-					<th>顧客名ｶﾅ</th>
-					<th>電話番号</th>
-					<th>FAX番号</th>
-					<th>携帯番号</th>
-				</tr>
-				<tr th:each="customer: ${customers}">
-					<td th:text="${customer.customer_name}"></td>
-					<td th:text="${customer.customer_kana}"></td>
-					<td th:text="${customer.phone_no}"></td>
-					<td th:text="${customer.fax_no}"></td>
-					<td th:text="${customer.mobile_phone}"></td>
-				</tr>
-			</table>
+			<form th:action="@{/customer_search}" th:object="${customerSearchForm}" method="POST">
+				<div>
+					顧客名：<input type="text" th:field="*{customerName}" />
+				</div>
+				<div>
+					顧客名カナ：<input type="text" th:field="*{customerKana}" />
+				</div>
+				<div>
+					連絡先：<input type="text" th:field="*{contactAddress}" />
+				</div>
+				<div class="right">
+					<input type="button" class="button1" id="clear" value="クリア" />
+					<input type="submit" class="button1" value="検索" />
+				</div>
+			</form>
+			<div>
+				<button class="button1" type="button" onclick="location.href='/contract_create'">新規</button>
+				<button class="button1" type="button" id="update" disabled="disabled">修正</button>
+				<button class="button1" type="button" id="delete" disabled="disabled">削除</button>
+			</div>
+			<div>
+				<table id="list">
+					<tr>
+						<th class="title" style="width:5%;"><button class="button1" type="button" id="uncheck" disabled="disabled">クリア</button></th>
+						<th class="title" style="width:25%;">顧客名</th>
+						<th class="title" style="width:25%;">顧客名ｶﾅ</th>
+						<th class="title" style="width:15%;">電話番号</th>
+						<th class="title" style="width:15%;">FAX番号</th>
+						<th class="title" style="width:15%;">携帯番号</th>
+					</tr>
+					<tr th:each="customer: ${customers}">
+						<td style="text-align:center;">
+							<input type="radio" name="chk" class="checks" th:value="${contract.contractKey}" />
+						</td>
+						<td th:text="${customer.customerName}"></td>
+						<td th:text="${customer.customerKana}"></td>
+						<td th:text="${customer.phoneNo}" style="text-align:center;"></td>
+						<td th:text="${customer.faxNo}" style="text-align:center;"></td>
+						<td th:text="${customer.mobilePhone}" style="text-align:center;"></td>
+					</tr>
+				</table>
+			</div>
 		</div>
+	<script>
+		$(document).ready(function(){
+			$('#clear').click(function(){
+				$('#customerName').val("");
+				$('#customerKana').val("");
+				$('#contactAddress').val("");
+				window.location.href = "/customer_list";
+			})
+
+			$('.checks').click(function(){
+				$('#update').prop('disabled', false);
+				$('#delete').prop('disabled', false);
+				$('#uncheck').prop('disabled', false);
+			})
+
+			$('#uncheck').click(function(){
+				$('input[name="chk"]:checked').prop('checked', false);
+				$('#update').prop('disabled', true);
+				$('#delete').prop('disabled', true);
+				$('#uncheck').prop('disabled', true);
+			});
+
+			$('#update').click(function(){
+				var value = $("input[name='chk']:checked").val();
+				var href = "/customer/change/" + value;
+				window.location.href = href;
+			})
+
+			$('#delete').click(function(){
+				var value = $("input[name='chk']:checked").val();
+				var href = "/customer/destroy/" + value;
+				window.location.href = href;
+			})
+		});
+	</script>
 	</body>
 </html>
