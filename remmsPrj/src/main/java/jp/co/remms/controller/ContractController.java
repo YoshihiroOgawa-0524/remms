@@ -11,6 +11,7 @@ import jakarta.persistence.Query;
 import jakarta.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -140,39 +141,44 @@ public class ContractController {
 			return "contract_detail";
 		}
 		// 新規契約登録
-		Contract contract = new Contract();
-		Timestamp now = new Timestamp(System.currentTimeMillis());
-		Integer userId = (Integer)this.session.getAttribute("userId");
-		LocalDate limitDay = form.getContractDate().plusYears(1).minusDays(1);
-		contract.setContractKey(form.getContractKey());
-		contract.setContractName(form.getContractName());
-		contract.setContractKana(form.getContractKana());
-		contract.setContractStartDate(form.getContractDate());
-		contract.setContractDate(form.getContractDate());
-		contract.setContractLimit(limitDay);
-		contract.setZip(form.getZip());
-		contract.setPref(form.getPref());
-		contract.setCity(form.getCity());
-		contract.setAddress(form.getAddress());
-		contract.setOtherAddress(form.getOtherAddress());
-		contract.setTel(form.getTel());
-		contract.setEmail(form.getEmail());
-		contract.setCreateDate(now);
-		contract.setUpdateDate(now);
-		contract.setCreateUser(userId);
-		contract.setUpdateUser(userId);
-		contractRepository.save(contract);
-		// 新規契約リンク登録
-		Contract new_contract = contractRepository.findByContractKeyAndDeleteDateIsNull(form.getContractKey());			
-		Arrays.stream(type).forEach(s -> {
-			ContractLink contractLink = new ContractLink();
-			contractLink.setContractId(new_contract.getId());
-			contractLink.setContractTypeId(s);
-			contractLinkRepository.save(contractLink);
-		});
+		try {
+			Contract contract = new Contract();
+			Timestamp now = new Timestamp(System.currentTimeMillis());
+			Integer userId = (Integer)this.session.getAttribute("userId");
+			LocalDate limitDay = form.getContractDate().plusYears(1).minusDays(1);
+			contract.setContractKey(form.getContractKey());
+			contract.setContractName(form.getContractName());
+			contract.setContractKana(form.getContractKana());
+			contract.setContractStartDate(form.getContractDate());
+			contract.setContractDate(form.getContractDate());
+			contract.setContractLimit(limitDay);
+			contract.setZip(form.getZip());
+			contract.setPref(form.getPref());
+			contract.setCity(form.getCity());
+			contract.setAddress(form.getAddress());
+			contract.setOtherAddress(form.getOtherAddress());
+			contract.setTel(form.getTel());
+			contract.setEmail(form.getEmail());
+			contract.setCreateDate(now);
+			contract.setUpdateDate(now);
+			contract.setCreateUser(userId);
+			contract.setUpdateUser(userId);
+			contractRepository.save(contract);
+			// 新規契約リンク登録
+			Contract new_contract = contractRepository.findByContractKeyAndDeleteDateIsNull(form.getContractKey());			
+			Arrays.stream(type).forEach(s -> {
+				ContractLink contractLink = new ContractLink();
+				contractLink.setContractId(new_contract.getId());
+				contractLink.setContractTypeId(s);
+				contractLinkRepository.save(contractLink);
+			});
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+		}
 		// ユーザ登録画面表示
 		model.addAttribute("type", "insert");
 		model.addAttribute("label", "登録");
+		model.addAttribute("mode", "admin");
 		System.out.println(form.getContractKey());
 		form2.setContractKey(form.getContractKey());
 		return "user_detail";
@@ -233,43 +239,46 @@ public class ContractController {
 			return "contract_detail";
 		}
 		// 更新対象データの取得
-		Contract contract = contractRepository.findByContractKeyAndDeleteDateIsNull(form.getContractKey());
-		Timestamp now = new Timestamp(System.currentTimeMillis());
-		Integer userId = (Integer)this.session.getAttribute("userId");
-		LocalDate limitDay = null;
-		if(contract.getContractDate() != form.getContractDate()) {
-			limitDay = form.getContractDate().plusYears(1).minusDays(1);
-		} else {
-			limitDay = contract.getContractDate();
+		try {
+			Contract contract = contractRepository.findByContractKeyAndDeleteDateIsNull(form.getContractKey());
+			Timestamp now = new Timestamp(System.currentTimeMillis());
+			Integer userId = (Integer)this.session.getAttribute("userId");
+			LocalDate limitDay = null;
+			if(contract.getContractDate() != form.getContractDate()) {
+				limitDay = form.getContractDate().plusYears(1).minusDays(1);
+			} else {
+				limitDay = contract.getContractDate();
+			}
+			contract.setContractKey(form.getContractKey());
+			contract.setContractDate(form.getContractDate());
+			contract.setContractName(form.getContractName());
+			contract.setContractKana(form.getContractKana());
+			contract.setZip(form.getZip());
+			contract.setPref(form.getPref());
+			contract.setCity(form.getCity());
+			contract.setAddress(form.getAddress());
+			contract.setOtherAddress(form.getOtherAddress());
+			contract.setTel(form.getTel());
+			contract.setEmail(form.getEmail());
+			contract.setContractLimit(limitDay);
+			contract.setUpdateDate(now);
+			contract.setUpdateUser(userId);
+			contractRepository.save(contract);
+			// 契約リンク削除
+			List<ContractLink> contractLinks = contractLinkRepository.findByContractId(form.getId());
+			for(ContractLink contractLink: contractLinks) {
+				contractLinkRepository.deleteById(contractLink.getId());
+			}
+			// 更新契約リンク登録
+			Arrays.stream(type).forEach(s -> {
+				ContractLink contractLink = new ContractLink();
+				contractLink.setContractId(form.getId());
+				contractLink.setContractTypeId(s);
+				contractLinkRepository.save(contractLink);
+			});
+		} catch (DataAccessException e){
+			e.printStackTrace();
 		}
-		
-		contract.setContractKey(form.getContractKey());
-		contract.setContractDate(form.getContractDate());
-		contract.setContractName(form.getContractName());
-		contract.setContractKana(form.getContractKana());
-		contract.setZip(form.getZip());
-		contract.setPref(form.getPref());
-		contract.setCity(form.getCity());
-		contract.setAddress(form.getAddress());
-		contract.setOtherAddress(form.getOtherAddress());
-		contract.setTel(form.getTel());
-		contract.setEmail(form.getEmail());
-		contract.setContractLimit(limitDay);
-		contract.setUpdateDate(now);
-		contract.setUpdateUser(userId);
-		contractRepository.save(contract);
-		// 契約リンク削除
-		List<ContractLink> contractLinks = contractLinkRepository.findByContractId(form.getId());
-		for(ContractLink contractLink: contractLinks) {
-			contractLinkRepository.deleteById(contractLink.getId());
-		}
-		// 更新契約リンク登録
-		Arrays.stream(type).forEach(s -> {
-			ContractLink contractLink = new ContractLink();
-			contractLink.setContractId(form.getId());
-			contractLink.setContractTypeId(s);
-			contractLinkRepository.save(contractLink);
-		});
 		// 契約一覧表示
 		model.addAttribute("contracts", contractRepository.findByDeleteDateIsNullOrderByContractDateDesc());
 		return "contract_list";
@@ -315,30 +324,31 @@ public class ContractController {
 		if(this.session.getAttribute("contractKey") == null) {
 			return "login/";
 		}
-		String key = form.getContractKey();
-		// 登録ユーザ削除
-		List<User> users = userRepository.findByContractKey(key);
-		for(User user: users) {
-			userRepository.deleteById(user.getId());
+		try {
+			String key = form.getContractKey();
+			// 登録ユーザ削除
+			List<User> users = userRepository.findByContractKey(key);
+			for(User user: users) {
+				userRepository.deleteById(user.getId());
+			}
+			Contract contract = contractRepository.findByContractKeyAndDeleteDateIsNull(key);
+			// 契約リンク削除
+			System.out.println("ID1=" + form.getId());
+			List<ContractLink> contractLinks = contractLinkRepository.findByContractId(form.getId());
+			System.out.println("Loop Start");
+			for(ContractLink contractLinkd: contractLinks) {
+				System.out.println("ID2=" + contractLinkd.getId());
+				contractLinkRepository.deleteById(contractLinkd.getId());
+			};
+			// 契約管理の削除
+			Timestamp now = new Timestamp(System.currentTimeMillis());
+			Integer userId = (Integer)this.session.getAttribute("userId");
+			contract.setDeleteDate(now);
+			contract.setDeleteUser(userId);
+			contractRepository.save(contract);
+		}catch (DataAccessException e) {
+			e.printStackTrace();
 		}
-		Contract contract = contractRepository.findByContractKeyAndDeleteDateIsNull(key);
-		// 契約リンク削除
-		System.out.println("ID1=" + form.getId());
-		List<ContractLink> contractLinks = contractLinkRepository.findByContractId(form.getId());
-		System.out.println("Loop Start");
-		for(ContractLink contractLinkd: contractLinks) {
-			System.out.println("ID2=" + contractLinkd.getId());
-			contractLinkRepository.deleteById(contractLinkd.getId());
-		};
-		System.out.println("Loop Stop");
-
-		// 契約管理の削除
-		Timestamp now = new Timestamp(System.currentTimeMillis());
-		Integer userId = (Integer)this.session.getAttribute("userId");
-		contract.setDeleteDate(now);
-		contract.setDeleteUser(userId);
-		contractRepository.save(contract);
-
 		model.addAttribute("contracts", contractRepository.findByDeleteDateIsNullOrderByContractDateDesc());
 		return "contract_list";
 	}

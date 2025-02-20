@@ -22,8 +22,9 @@ public class UserDetailForm implements Serializable {
 	@NotBlank
 	private String userKana;
 	
-	@NotBlank
 	private String password;
+	
+	private String mode;
 
 	public Long getId() {
 		return id;
@@ -79,5 +80,13 @@ public class UserDetailForm implements Serializable {
 	
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	public String getMode() {
+		return mode;
+	}
+	
+	public void setMode(String mode) {
+		this.mode = mode;
 	}
 }

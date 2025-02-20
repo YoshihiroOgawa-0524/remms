@@ -19,6 +19,9 @@
 				<div th:unless="${type} == 'insert'">
 					<input type="hidden" th:field="*{id}" />
 				</div>
+				<div th:if="${type} == 'insert'">
+					<input type="hidden" id="mode" name="mode" th:value="${mode}"/>
+				</div>
 				<div th:unless="${type} == 'delete'">
 					ユーザID：<input type="text" th:field="*{userId}" />
 				</div>
@@ -38,7 +41,9 @@
 					ユーザ名ｶﾅ：<input type="text" th:field="*{userKana}" disabled />
 				</div>
 				<button class="button1" type="submit" th:text="${label}"></button>
-				<button class="button1" type="button" onclick="window.location.href='/user_list'">戻る</button>
+				<div th:unless="${mode} == 'admin'}">
+					<button class="button1" type="button" onclick="window.location.href='/user_list'">戻る</button>
+				</div>
 			</form>
 		</div>
 	</body>

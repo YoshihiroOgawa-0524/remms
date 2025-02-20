@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import jp.co.remms.entity.Contract;
 import jp.co.remms.entity.User;
+import jp.co.remms.form.ContractSearchForm;
 import jp.co.remms.form.UserDetailForm;
 import jp.co.remms.repository.ContractRepository;
 import jp.co.remms.repository.UserRepository;
@@ -55,7 +56,8 @@ public class UserController {
 	}
 
 	@PostMapping("/user/insert")
-	public String userInsert(@Validated @ModelAttribute UserDetailForm form, BindingResult result, Model model) {
+//	public String userInsert(@PathVariable("mode") String mode, @Validated @ModelAttribute UserDetailForm form, BindingResult result, Model model) {
+	public String userInsert(@Validated @ModelAttribute UserDetailForm form, BindingResult result, @ModelAttribute ContractSearchForm form1, Model model) {
 		// セッション切れ対応
 		if(this.session.getAttribute("contractKey") == null) {
 			return "login/";
@@ -99,8 +101,17 @@ public class UserController {
 		user.setCreateUser(userId);
 		user.setUpdateUser(userId);
 		userRepository.save(user);
-		// ユーザ一覧表示
-		model.addAttribute("contracts", userRepository.findByContractKeyAndDeleteDateIsNullOrderById(form.getContractKey()));
-		return "contract_list";
+		System.out.println("USER=" + form.getMode());
+		if(form.getMode().equals("admin")) {
+			System.out.println("ADMIN");
+			// 契約一覧表示
+			model.addAttribute("contracts", contractRepository.findByDeleteDateIsNullOrderByContractDateDesc());
+			return "contract_list";
+		} else {
+			// ユーザ一覧表示
+			System.out.println("OTHER");
+			model.addAttribute("users", userRepository.findByContractKeyAndDeleteDateIsNullOrderById(form.getContractKey()));
+			return "user_list";
+		}
 	}
 }

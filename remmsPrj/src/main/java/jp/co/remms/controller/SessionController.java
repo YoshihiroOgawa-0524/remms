@@ -45,6 +45,9 @@ public class SessionController {
 		this.session.setAttribute("contractKey", null);
 		this.session.setAttribute("contractId", null);
 		// 指定されたKeyにて契約情報を取得
+		if(contractKey == null) {
+			return "noContract";
+		}
 		Contract contract = contractRepository.findByContractKeyAndDeleteDateIsNull(contractKey);
 		// 契約情報が取得できた場合、sessionに情報を維持
 		if(contract != null) {
@@ -65,6 +68,7 @@ public class SessionController {
 			return "session/login";
 		}
 		// 入力されたユーザIDにて、ユーザ情報を取得
+		System.out.println("Login User=" + form.getUserId());
 		User user = userRepository.findByUserId(form.getUserId());
 		// ユーザが存在した場合
 		if(user != null) {
