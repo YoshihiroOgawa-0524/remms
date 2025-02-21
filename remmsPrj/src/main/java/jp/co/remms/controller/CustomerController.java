@@ -57,7 +57,7 @@ public class CustomerController {
 		}
 		Long contractId = (Long)this.session.getAttribute("contractId");
 		model.addAttribute("customers", customerRepository.findByContractIdAndDeleteDateIsNullOrderByCustomerKana(contractId));
-		return "contract_list";
+		return "customer_list";
 	}
 
 	@PostMapping("/customer_search")
@@ -67,9 +67,11 @@ public class CustomerController {
 		}
 		// 検索用パラメータ設定
 		Query query = entityManager.createNamedQuery("findByCustomerSearchQuery");
-		query.setParameter("name", "%" + form.getCustomerName() + "%");
-		query.setParameter("kana", "%" + form.getCustomerKana() + "%");
-		query.setParameter("contact", form.getContactAddress());
+		System.out.println("名前：" + form.getSearchName());
+		System.out.println("カナ：" + form.getSearchKana());
+		query.setParameter("name", "%" + form.getSearchName() + "%");
+		query.setParameter("kana", "%" + form.getSearchKana() + "%");
+		query.setParameter("contact", form.getSearchAddress());
 		// 検索結果表示
 		model.addAttribute("customers", query.getResultList());
 		return "customer_list";
@@ -82,7 +84,6 @@ public class CustomerController {
 		}
 		// 新規登録画面の設定
 		model.addAttribute("prefs", prefRepository.findAll());
-		model.addAttribute("contractTypes", contractTypeRepository.findByDeleteDateIsNullOrderById());
 		model.addAttribute("type", "insert");
 		model.addAttribute("label", "登録");
 		return "customer_detail";
@@ -111,7 +112,8 @@ public class CustomerController {
 		Customer customer = new Customer();
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		Integer userId = (Integer)this.session.getAttribute("userId");
-		customer.setContractId(form.getContractId());
+		System.out.println("CONTRACT_ID=" + this.session.getAttribute("contractId"));
+		customer.setContractId((Long)this.session.getAttribute("contractId"));
 		customer.setCustomerName(form.getCustomerName());
 		customer.setCustomerKana(form.getCustomerKana());
 		customer.setZip(form.getZip());

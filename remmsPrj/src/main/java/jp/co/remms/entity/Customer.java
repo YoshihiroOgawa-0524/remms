@@ -14,7 +14,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "customers")
-@NamedQuery(name="findByCustomerSearchQuery", query="SELECT c FROM Customer c WHERE  c.customerName LIKE :name AND c.customerKana LIKE :kana AND (c.phoneNo = :contact or c.faxNo = :contact or c.mobilePhone = :contact) AND c.deleteDate IS NULL ORDER BY c.customerKana")
+@NamedQuery(name="findByCustomerSearchQuery", query="SELECT c FROM Customer c WHERE c.customerName LIKE :name AND c.customerKana LIKE :kana AND (c.phoneNo = :contact or c.faxNo = :contact or c.mobilePhone = :contact) AND c.deleteDate IS NULL ORDER BY c.customerKana")
 
 public class Customer {
 	@Id

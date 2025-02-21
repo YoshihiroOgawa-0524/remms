@@ -2,31 +2,31 @@ package jp.co.remms.form;
 
 public class CustomerSearchForm {
 	
-	private String customerName;
-	private String customerKana;
-	private String contactAddress;
+	private String searchName;
+	private String searchKana;
+	private String searchAddress;
 
-	public String getCustomerName() {
-		return customerName;
+	public String getSearchName() {
+		return searchName;
 	}
 
-	public void setCustomerName(String customerName) {
-		this.customerName = customerName;
+	public void setSearchName(String customerName) {
+		this.searchName = customerName;
 	}
 
-	public String getCustomerKana() {
-		return customerKana;
+	public String getSearchKana() {
+		return searchKana;
 	}
 
-	public void setCustomerKana(String customerKana) {
-		this.customerKana = customerKana;
+	public void setSearchKana(String customerKana) {
+		this.searchKana = customerKana;
 	}
 
-	public String getContactAddress() {
-		return contactAddress;
+	public String getSearchAddress() {
+		return searchAddress;
 	}
 
-	public void setContactAddress(String contactAddress) {
-		this.contactAddress = contactAddress;
+	public void setSearchAddress(String contactAddress) {
+		this.searchAddress = contactAddress;
 	}
 }

@@ -130,14 +130,14 @@ public class ContractController {
 		Contract chk = contractRepository.findByContractKeyAndDeleteDateIsNull(form.getContractKey());
 		if(chk != null) {
 			model.addAttribute("prefs", prefRepository.findAll());
-			model.addAttribute("errs", "既に同一の契約IDが使用されています。");
+			model.addAttribute("erros", "既に同一の契約IDが使用されています。");
 			return "contract_detail";
 		}
 		// 契約タイプのチェック
 		Long[] type = form.getContractType();
 		if(type.length == 0) {
 			model.addAttribute("prefs", prefRepository.findAll());
-			model.addAttribute("errs", "契約タイプを選択してください。");
+			model.addAttribute("erros", "契約タイプを選択してください。");
 			return "contract_detail";
 		}
 		// 新規契約登録

@@ -8,13 +8,13 @@
 			<h1>顧客一覧</h1>
 			<form th:action="@{/customer_search}" th:object="${customerSearchForm}" method="POST">
 				<div>
-					顧客名：<input type="text" th:field="*{customerName}" />
+					顧客名：<input type="text" th:field="*{searchName}" />
 				</div>
 				<div>
-					顧客名カナ：<input type="text" th:field="*{customerKana}" />
+					顧客名カナ：<input type="text" th:field="*{searchKana}" />
 				</div>
 				<div>
-					連絡先：<input type="text" th:field="*{contactAddress}" />
+					連絡先：<input type="text" th:field="*{searchAddress}" />
 				</div>
 				<div class="right">
 					<input type="button" class="button1" id="clear" value="クリア" />
@@ -22,7 +22,7 @@
 				</div>
 			</form>
 			<div>
-				<button class="button1" type="button" onclick="location.href='/contract_create'">新規</button>
+				<button class="button1" type="button" onclick="location.href='/customer_create'">新規</button>
 				<button class="button1" type="button" id="update" disabled="disabled">修正</button>
 				<button class="button1" type="button" id="delete" disabled="disabled">削除</button>
 			</div>
@@ -38,7 +38,7 @@
 					</tr>
 					<tr th:each="customer: ${customers}">
 						<td style="text-align:center;">
-							<input type="radio" name="chk" class="checks" th:value="${contract.contractKey}" />
+							<input type="radio" name="chk" class="checks" th:value="${customer.id}" />
 						</td>
 						<td th:text="${customer.customerName}"></td>
 						<td th:text="${customer.customerKana}"></td>

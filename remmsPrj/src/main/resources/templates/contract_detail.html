@@ -15,6 +15,9 @@
 				<ul th:if="${#fields.hasErrors('*')}">
 					<li style="color:red;" th:each="err : ${#fields.errors('*')}" th:text="${err}">
 				</ul>
+				<div class="login">
+					<span style="color:red;" th:text="*{errors}"></span>
+				</div>
 				<div th:unless="${type} == 'insert'">
 					<input type="hidden" th:field="*{id}" />
 				</div>

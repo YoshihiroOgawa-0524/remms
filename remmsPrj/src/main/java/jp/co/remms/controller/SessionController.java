@@ -72,7 +72,7 @@ public class SessionController {
 		System.out.println("Login User=" + form.getUserId());
 		User user = userRepository.findByUserId(form.getUserId());
 		// ユーザが存在した場合
-		if(user != null) {
+		if(user != null && this.session.getAttribute("contractKey").equals(user.getContractKey())) {
 			try {
 				MessageDigest md = MessageDigest.getInstance("SHA-256");
 				md.update(form.getPassword().getBytes());
@@ -106,6 +106,7 @@ public class SessionController {
 		String contractKey = (String)session.getAttribute("contractKey");
 		Contract contract = contractRepository.findByContractKeyAndDeleteDateIsNull(contractKey);
 		model.addAttribute("contractName", contract.getContractName());
+		model.addAttribute("errors", "該当の契約単位には、このユーザが存在しません。");
 		return "session/login";
 	}
 
