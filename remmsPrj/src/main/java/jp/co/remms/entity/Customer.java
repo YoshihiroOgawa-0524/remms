@@ -1,91 +1,107 @@
 package jp.co.remms.entity;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "customers")
+@NamedQuery(name="findByCustomerSearchQuery", query="SELECT c FROM Customer c WHERE  c.customerName LIKE :name AND c.customerKana LIKE :kana AND (c.phoneNo = :contact or c.faxNo = :contact or c.mobilePhone = :contact) AND c.deleteDate IS NULL ORDER BY c.customerKana")
 
 public class Customer {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_customers_gen")
 	@SequenceGenerator(name = "seq_customers_gen", sequenceName = "seq_customers", allocationSize = 1)
-	private Integer id;
+	private Long id;
 	
-	@Column
+	@Column(name = "contract_id")
+	private Long contractId;
+	
+	@Column(name = "customer_name")
 	private String customerName;
 	
-	@Column
+	@Column(name = "customer_kana")
 	private String customerKana;
 	
-	@Column
+	@Column(name = "zip")
 	private String zip;
 	
-	@Column
+	@Column(name = "pref_cd")
 	private String prefCd;
 	
-	@Column
-	private String address1;
+	@Column(name = "city")
+	private String city;
 	
-	@Column
-	private String address2;
+	@Column(name = "address")
+	private String address;
 	
-	@Column
-	private String phoneNo;
+	@Column(name = "other_address")
+	private String otherAddress;
 	
-	@Column
-	private String faxNo;
+	@Column(name = "birthday")
+	private LocalDate birthday;
 
-	@Column
-	private String mobilePhone;
-
-	@Column
-	private Integer mediumCd;
-
-	@Column
-	private String birthday;
-
-	@Column
+	@Column(name = "email")
 	private String email;
 
-	@Column
-	private Integer companyCd;
+	@Column(name = "phone_no")
+	private String phoneNo;
+	
+	@Column(name = "fax_no")
+	private String faxNo;
 
-	@Column
-	private Integer contractId;
+	@Column(name = "mobile_phone")
+	private String mobilePhone;
 
-	@Column
+	@Column(name = "compay_id")
+	private Long companyId;
+
+	@Column(name = "medium_id")
+	private Long mediumId;
+
+	@Column(name = "memo")
 	private String memo;
 	
-	@Column
-	private String createDate;
+	@Column(name = "create_date")
+	private Timestamp createDate;
 	
-	@Column
-	private String updateDate;
+	@Column(name = "update_date")
+	private Timestamp updateDate;
 	
-	@Column
-	private String deleteDate;
+	@Column(name = "delete_date")
+	private Timestamp deleteDate;
 	
-	@Column
+	@Column(name = "create_user")
 	private Integer createUser;
 	
-	@Column
+	@Column(name = "update_user")
 	private Integer updateUser;
 	
-	@Column
+	@Column(name = "delete_user")
 	private Integer deleteUser;
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 	
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public Long getContractId() {
+		return contractId;
+	}
+
+	public void setContractId(Long contractId) {
+		this.contractId = contractId;
 	}
 	
 	public String getCustomerName() {
@@ -120,59 +136,35 @@ public class Customer {
 		this.prefCd = pref_cd;
 	}
 
-	public String getAddress1() {
-		return address1;
+	public String getCity() {
+		return city;
 	}
 	
-	public void setAddress1(String address_1) {
-		this.address1 = address_1;
+	public void setCity(String city) {
+		this.city = city;
 	}
 
-	public String getAddress2() {
-		return address2;
+	public String getAddress() {
+		return address;
 	}
 	
-	public void setAddress2(String address_2) {
-		this.address2 = address_2;
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
-	public String getPhoneNo() {
-		return phoneNo;
+	public String getOtherAddress() {
+		return otherAddress;
 	}
 	
-	public void setPhoneNo(String phone_no) {
-		this.phoneNo = phone_no;
+	public void setOtherAddress(String otherAddress) {
+		this.otherAddress = otherAddress;
 	}
 
-	public String getFaxNo() {
-		return faxNo;
-	}
-	
-	public void setFaxNo(String fax_no) {
-		this.faxNo = fax_no;
-	}
-
-	public String getMobilePhone() {
-		return mobilePhone;
-	}
-	
-	public void setMobilePhone(String mobile_phone) {
-		this.mobilePhone = mobile_phone;
-	}
-
-	public Integer getMediumCd() {
-		return mediumCd;
-	}
-	
-	public void setMediumCd(Integer medium_cd) {
-		this.mediumCd = medium_cd;
-	}
-
-	public String getBirthday() {
+	public LocalDate getBirthday() {
 		return birthday;
 	}
 	
-	public void setBirthday(String birthday) {
+	public void setBirthday(LocalDate birthday) {
 		this.birthday = birthday;
 	}
 
@@ -184,20 +176,44 @@ public class Customer {
 		this.email = email;
 	}
 
-	public Integer getCompanyCd() {
-		return companyCd;
+	public String getPhoneNo() {
+		return phoneNo;
 	}
 	
-	public void setCompanyCd(Integer company_cd) {
-		this.companyCd = company_cd;
+	public void setPhoneNo(String phoneNo) {
+		this.phoneNo = phoneNo;
 	}
 
-	public Integer getContractId() {
-		return contractId;
+	public String getFaxNo() {
+		return faxNo;
+	}
+	
+	public void setFaxNo(String faxNo) {
+		this.faxNo = faxNo;
 	}
 
-	public void setContractId(Integer contract_id) {
-		this.contractId = contract_id;
+	public String getMobilePhone() {
+		return mobilePhone;
+	}
+	
+	public void setMobilePhone(String mobilePhone) {
+		this.mobilePhone = mobilePhone;
+	}
+
+	public Long getMediumId() {
+		return mediumId;
+	}
+	
+	public void setMediumId(Long mediumId) {
+		this.mediumId = mediumId;
+	}
+
+	public Long getCompanyId() {
+		return companyId;
+	}
+	
+	public void setCompanyId(Long companyId) {
+		this.companyId = companyId;
 	}
 	
 	public String getMemo() {
@@ -208,27 +224,27 @@ public class Customer {
 		this.memo = memo;
 	}
 
-	public String getCreateDate() {
+	public Timestamp getCreateDate() {
 		return createDate;
 	}
 	
-	public void setCreateDate(String create_date) {
+	public void setCreateDate(Timestamp create_date) {
 		this.createDate = create_date;
 	}
 
-	public String getUpdateDate() {
+	public Timestamp getUpdateDate() {
 		return updateDate;
 	}
 	
-	public void setUpdateDate(String update_date) {
+	public void setUpdateDate(Timestamp update_date) {
 		this.updateDate = update_date;
 	}
 
-	public String getDeleteDate() {
+	public Timestamp getDeleteDate() {
 		return deleteDate;
 	}
 	
-	public void setDeleteDate(String delete_date) {
+	public void setDeleteDate(Timestamp delete_date) {
 		this.deleteDate = delete_date;
 	}
 
